@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class IngredientUpdateRequestDto {
-    private String name;
-    private int amount;
-    private String unit;
+    private String updateName;
+    private Integer updateAmount;
+    private String updateUnit;
 }

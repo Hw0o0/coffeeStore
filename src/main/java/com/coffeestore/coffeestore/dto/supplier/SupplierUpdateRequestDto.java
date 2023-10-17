@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SupplierUpdateRequestDto {
-    private String name;
-    private String address;
+    private String updateName;
+    private String updateAddress;
 }

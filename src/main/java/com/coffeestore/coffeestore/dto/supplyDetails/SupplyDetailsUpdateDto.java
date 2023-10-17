@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class SupplyDetailsUpdateDto {
-    private int supplyAmount;
-    private int price;
+    private Integer supplyAmount;
+    private Integer price;
 }

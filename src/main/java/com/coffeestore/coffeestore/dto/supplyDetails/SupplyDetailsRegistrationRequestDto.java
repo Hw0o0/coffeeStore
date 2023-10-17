@@ -11,8 +11,8 @@ import java.util.Optional;
 @Data
 @Builder
 public class SupplyDetailsRegistrationRequestDto {
-    private int supplyAmount;
-    private int price;
+    private Integer supplyAmount;
+    private Integer price;
 
     public SupplyDetails toEntity(Supply supply, Optional<Ingredient> ingredient){
         return  SupplyDetails.builder()

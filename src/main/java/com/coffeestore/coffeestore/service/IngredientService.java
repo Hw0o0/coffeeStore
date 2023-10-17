@@ -2,12 +2,12 @@ package com.coffeestore.coffeestore.service;
 
 import com.coffeestore.coffeestore.dto.ingredient.IngredientRegistrationRequestDto;
 import com.coffeestore.coffeestore.dto.ingredient.IngredientUpdateRequestDto;
+import com.coffeestore.coffeestore.dto.recipe.RecipeSearchRequestDto;
 import com.coffeestore.coffeestore.entity.Ingredient;
 import com.coffeestore.coffeestore.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +25,9 @@ public class IngredientService {
         Optional<Ingredient> ingredient = ingredientRepository.findById(id);
         return ingredient.orElse(null);
     }
+    public Ingredient findByNameAndUnit(RecipeSearchRequestDto recipeSearchRequestDto){
+        return ingredientRepository.findByNameAndUnit(recipeSearchRequestDto.getName(), recipeSearchRequestDto.getUnit());
+    }
 
     public void createByIngredient(IngredientRegistrationRequestDto ingredientRegistrationRequestDto){
         Ingredient ingredient = ingredientRegistrationRequestDto.toEntity();
@@ -38,6 +41,16 @@ public class IngredientService {
     public void deleteByIngredient(Long id){
         Ingredient ingredient = findByIngredient(id);
         ingredient.setState(0);
+        ingredientRepository.save(ingredient);
+    }
+
+    public void stateChangeByIngredient(Long ingredientId) {
+        Ingredient ingredient = findByIngredient(ingredientId);
+        if(ingredient.getState() == 0){
+            ingredient.setState(1);
+        }else {
+            ingredient.setState(0);
+        }
         ingredientRepository.save(ingredient);
     }
 }

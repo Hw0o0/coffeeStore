@@ -5,13 +5,14 @@ import com.coffeestore.coffeestore.dto.menu.MenuUpdateRequestDto;
 import com.coffeestore.coffeestore.entity.Menu;
 import com.coffeestore.coffeestore.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MenuService {
 
@@ -33,8 +34,17 @@ public class MenuService {
             menuRepository.save(menu);
         }
     }
-    public void updateByMenu(Long id, MenuUpdateRequestDto menuUpdateRequestDto){
-        Menu menu = findByMenu(id);
+    public void stateChangeByMenu(Long menuId){
+        Menu menu = findByMenu(menuId);
+        if(menu.getState() == 0){
+            menu.setState(1);
+        }else {
+            menu.setState(0);
+        }
+        menuRepository.save(menu);
+    }
+    public void updateByMenu(Long menuId, MenuUpdateRequestDto menuUpdateRequestDto){
+        Menu menu = findByMenu(menuId);
         menu.update(menuUpdateRequestDto);
         menuRepository.save(menu);
     }

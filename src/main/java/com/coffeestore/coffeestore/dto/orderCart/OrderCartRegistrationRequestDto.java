@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Data
 public class OrderCartRegistrationRequestDto {
-        private int amount;
+        private Integer amount;
 
         public OrderCart toEntity(Order order, Optional<Menu> menu){
                 return OrderCart.builder()

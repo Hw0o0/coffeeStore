@@ -12,7 +12,7 @@ public class UserRegistrationRequestDto {
 
     private String address;
 
-    private int phoneNumber;
+    private Integer phoneNumber;
 
     public User toEntity(){ //User로 반환
         return User.builder().

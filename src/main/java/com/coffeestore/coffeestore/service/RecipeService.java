@@ -18,15 +18,20 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RecipeService {
-    private MenuRepository menuRepository;
-    private RecipeRepository recipeRepository;
-    private IngredientRepository ingredientRepository;
+    private final MenuRepository menuRepository;
+    private final RecipeRepository recipeRepository;
+    private final IngredientRepository ingredientRepository;
 
-    public List<Recipe> findByMenuUseAll(Long id){    //요리에 사용되는 재료들
-        return recipeRepository.findAll()
+    public List<Recipe> findByMenuUseAll(Long menuId){    //요리에 사용되는 재료들
+        List<Recipe> recipeList = recipeRepository.findAll()
                 .stream()
-                .filter(Recipe -> Recipe.getMenu().getId().equals(id))
+                .filter(Recipe -> Recipe.getMenu().getId().equals(menuId))
                 .collect(Collectors.toList());
+        if(recipeList.isEmpty()){
+            return recipeList;
+        }else {
+            return null;
+        }
     }
     public Recipe findByRecipe(Long id){
         Optional<Recipe> recipe = recipeRepository.findById(id);

@@ -8,7 +8,13 @@
 
 <h2>회원가입</h2>
 
-<form action="/user/registration" method="POST">
+<div>
+    <a href="/home">
+        <img src="/images/logo.png" alt="">
+    </a>
+</div>
+
+<form th:action="@{/user/registration}" method="POST">
     <div>
         <label for="name">이름:</label>
         <input type="text" id="name" name="name" required>

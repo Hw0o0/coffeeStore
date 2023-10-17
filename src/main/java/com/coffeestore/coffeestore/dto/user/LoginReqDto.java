@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class LoginReqDto {
     private String name;
-    private int phoneNumber;
+    private String phoneNumber;
 }

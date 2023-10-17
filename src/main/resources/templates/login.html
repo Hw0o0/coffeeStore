@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>메인 페이지</title>
+</head>
+<body>
+<div class="container">
+  <a href="/home">
+  <img src="/images/logo.png" alt="">
+</a>
+
+  <form method="POST" th:action="@{/user/login}">
+    <label for="name">이름 : </label>
+    <input type="text" name="name" id="name"/><br/>
+
+    <label for="phoneNumber">전화번호 : </label>
+    <input type="text" name="phoneNumber" id="phoneNumber"/><br/>
+
+    <input type="submit" value="로그인"/>
+    <a th:href="@{/home}" type = "button">돌아가기</a>
+  </form>
+
+</div>
+</body>
+</html>

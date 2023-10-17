@@ -1,6 +1,6 @@
 package com.coffeestore.coffeestore.service;
 
-import com.coffeestore.coffeestore.dto.supplier.SupplierRegistrationDto;
+import com.coffeestore.coffeestore.dto.supplier.SupplierRegistrationRequestDto;
 import com.coffeestore.coffeestore.dto.supplier.SupplierUpdateRequestDto;
 import com.coffeestore.coffeestore.entity.Supplier;
 import com.coffeestore.coffeestore.entity.Supply;
@@ -9,7 +9,6 @@ import com.coffeestore.coffeestore.repository.SupplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -30,7 +29,7 @@ public class SupplierService {
         return supplier.orElse(null);
     }
 
-    public void createBySupplier(SupplierRegistrationDto supplierRegistrationDto) {
+    public void createBySupplier(SupplierRegistrationRequestDto supplierRegistrationDto) {
         Supplier supplier = supplierRegistrationDto.toEntity();
         supplierRepository.save(supplier);
     }
@@ -54,6 +53,16 @@ public class SupplierService {
         }
         supplyRepository.saveAll(supplies);
         supplier.setState(0);
+        supplierRepository.save(supplier);
+    }
+
+    public void stateChangeBySupplier(Long supplierId) {
+        Supplier supplier = findBySupplier(supplierId);
+        if(supplier.getState() == 0){
+            supplier.setState(1);
+        }else {
+            supplier.setState(0);
+        }
         supplierRepository.save(supplier);
     }
 }

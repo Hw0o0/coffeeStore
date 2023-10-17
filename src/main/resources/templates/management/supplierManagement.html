@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>공급업체 관리</title>
+</head>
+<body>
+<header>
+  <div>
+    <a href="/home">
+      <img src="/images/logo.png" alt="">
+    </a>
+  </div>
+  <ul>
+    <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
+    <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
+      <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
+    <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
+    <li><a th:if="${session.user != null}" href="/orderCart/myOrderCart">나의 장바구니</a></li>
+    <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
+    <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
+  </ul>
+
+  <form method="POST" th:action="@{/supplier/registration}">
+    <label for="name">이름 : </label>
+    <input type="text" name="name" id="name"/><br/>
+    <label for="address">주소 : </label>
+    <input type="text" name="address" id="address"/><br/>
+    <input type="submit" value="등록하기"/>
+    <a th:href="@{/supplier}" type = "button">돌아가기</a>
+  </form>
+
+  <div>
+    <form method="POST" th:action="@{/supplier/supplierSearch}" id="supplierSearch">
+      <div>
+        <label>
+          <input type="text" name="supplierName" placeholder="찾으시는 공급업체명을 입력하세요">
+        </label>
+        <button type="submit">검색</button>
+      </div>
+    </form>
+  </div>
+</header>
+
+<nav>
+  <div>
+    <div>
+      <h3>공급업체 관리</h3>
+    </div>
+    <div>
+      <div th:each="supplier: ${suppliers}">
+        <div class="supplier">
+          <div>
+            <h3 class="supplier-name" th:text="${supplier.getName()}"></h3>
+            <h4 class="supplier-address" th:text="${supplier.getAddress()}"></h4>
+            <h4 class="supplier-state" th:text="${supplier.getState() == 0 ? '비활성화':'활성화'}"></h4>
+          </div>
+
+          <form th:method="patch" th:action = "@{/supplier/update}" id="supplierUpdate">
+            <input type ="hidden" name="supplierId" th:value="${supplier.getId()}"/>
+            <label for="updateName">이름 : </label>
+            <input type="text" name="updateName" id="updateName"/><br/>
+            <label for="updateAddress">주소 : </label>
+            <input type="text" name="updateAddress" id="updateAddress"/><br/>
+            <input type="submit" value="공급업체 정보 수정">
+          </form>
+
+          <form th:method="delete" th:action = "@{/supplier/delete}" id="supplierDelete">
+            <input type ="hidden" name="supplierId" th:value="${supplier.getId()}"/>
+            <input type="submit" value="공급업체 정보 삭제">
+          </form>
+
+          <form th:method="patch" th:action = "@{/supplier/state}" id="supplierState">
+            <input type ="hidden" name="supplierId" th:value="${supplier.getId()}"/>
+            <input type="submit" value="공급업체 상태 변경">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+</body>
+</html>

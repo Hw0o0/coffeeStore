@@ -10,14 +10,14 @@ public class MenuRegistrationRequestDto {
 
     private String name;
 
-    private String price;
+    private Integer price;
 
     private String categorize;
 
     public Menu toEntity(){
         return Menu.builder()   //menu 반환
                 .name(name)
-                .price(Integer.parseInt(price))
+                .price(price)
                 .categorize(categorize)
                 .state(1)
                 .createdDate(new Date())

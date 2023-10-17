@@ -1,7 +1,6 @@
 package com.coffeestore.coffeestore.entity;
 
 import com.coffeestore.coffeestore.dto.menu.MenuUpdateRequestDto;
-import com.coffeestore.coffeestore.dto.order.OrderRegistrationRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +29,7 @@ public class Menu {
     private String categorize;
 
     @Column(nullable = false)
-    private int state;
+    private Integer state;
 
     @Column(name = "created_date")
     private Date createdDate;
@@ -39,9 +38,9 @@ public class Menu {
     private Date modificationDate;
 
     public void update(MenuUpdateRequestDto menuUpdateRequestDto){
-        this.name = menuUpdateRequestDto.getName();
-        this.price = menuUpdateRequestDto.getPrice();
-        this.categorize = menuUpdateRequestDto.getCategorize();
+        this.name = menuUpdateRequestDto.getUpdateName();
+        this.price = menuUpdateRequestDto.getUpdatePrice();
+        this.categorize = menuUpdateRequestDto.getUpdateCategorize();
         this.modificationDate = new Date();
         this.state = 1;
     }

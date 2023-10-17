@@ -1,6 +1,5 @@
 package com.coffeestore.coffeestore.entity;
 
-import com.coffeestore.coffeestore.dto.user.UserRegistrationRequestDto;
 import com.coffeestore.coffeestore.dto.user.UserUpdateRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,7 +27,7 @@ public class User {
     private String address;
 
     @Column(nullable = false,name = "phone_number")
-    private int phoneNumber;
+    private Integer phoneNumber;
 
     @Column(nullable = false)
     private int state;
@@ -40,9 +39,9 @@ public class User {
     private Date modificationDate;
 
     public void update(UserUpdateRequestDto userUpdateRequestDto){
-        this.name = userUpdateRequestDto.getName();
-        this.address = userUpdateRequestDto.getAddress();
-        this.phoneNumber = Integer.parseInt(userUpdateRequestDto.getPhoneNumber());
+        this.name = userUpdateRequestDto.getUpdateName();
+        this.address = userUpdateRequestDto.getUpdateAddress();
+        this.phoneNumber = userUpdateRequestDto.getUpdatePhoneNumber();
         this.modificationDate = new Date();
     }
 

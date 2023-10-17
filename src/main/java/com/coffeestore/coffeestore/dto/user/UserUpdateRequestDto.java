@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class UserUpdateRequestDto {
 
-    private String name;
+    private String updateName;
     
-    private String address;
+    private String updateAddress;
     
-    private String phoneNumber;
+    private Integer updatePhoneNumber;
 
 }

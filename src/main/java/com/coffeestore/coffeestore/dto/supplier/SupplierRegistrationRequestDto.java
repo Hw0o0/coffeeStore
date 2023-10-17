@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Builder
-public class SupplierRegistrationDto {
+public class SupplierRegistrationRequestDto {
     private String name;
 
     private String address;

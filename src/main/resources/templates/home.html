@@ -8,55 +8,45 @@
 <header>
     <div>
         <a href="/home">
-            <img src="/static/images/logo.png" alt="">
+            <img src="/images/logo.png" alt="">
         </a>
     </div>
     <ul>
-        <li th:if="${session.user != null}"><span th:text="${session.user.name}"></span>님 안녕하세요.</li>
-        <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
-        <li><a th:if="${session.user != null}" href="/orderCart/myOrderCart">나의 장바구니</a></li>
+        <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
         <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
             <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
-        <li><a th:unless="${session.user != null}" href="/user/userRegistration">회원 가입</a></li>
-        <li><a th:if="${session.user != null && session.user.getRole() != 0}" href="/user/userManagement">회원 관리</a></li>
-        <li><a th:if="${session.user != null && session.user.getRole() != 0}" href="/menu/menuManagement">메뉴 관리</a></li>
-        <li><a th:if="${session.user != null && session.user.getRole() != 0}" href="/order/userOrderManagement">주문 관리</a></li>
+        <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
+        <li><a th:if="${session.user != null}" href="/orderCart/myOrderCart">나의 장바구니</a></li>
+        <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
+        <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
+        <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
+        <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
+        <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
+        <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
     </ul>
     <div>
-        <form method="POST" th:action="@{/menu/bookSearch}" id="bookSearch">
+        <form method="POST" th:action="@{/menu/bookSearch}" id="menuSearch">
             <div>
-                    <input type="text" name="coffeeName" placeholder="찾으시는 커피를 입력하세요">
-                    <button type="submit">검색</button>
+                <label>
+                    <input type="text" name="menuName" placeholder="찾으시는 메뉴명을 입력하세요">
+                </label>
+                <button type="submit">검색</button>
             </div>
         </form>
     </div>
-
 </header>
 
 <nav>
 
     <h3>전체 상품</h3>
-    <div th:each="menu,row:${books}">
-        <div>
+    <div th:each="menu: ${menus}">
+        <div class="menu">
             <div>
-                <span>커피명</span>
-                <h3 th:text="${menu.getBookName()}" th:unless="${session.user != null}"></h3>
-                <form method="POST" th:if="${session.user != null && session.user.getRole() != 0}"
-                      th:action="@{/menu/bookUpdate}" class="bookInfo">
-                    <input type="hidden" name="bookName" th:value="${menu.getBookName()}"/>
-                    <h3>
-                        <button type="submit" th:text="${menu.getBookName()}">상세 정보</button>
-                    </h3>
-                </form>
-                
-                <span>판매 가격</span><h4 th:text="${menu.getPrice()}">원</h4>
+                <h3 class="menu-name" th:text="${menu.getName()}"></h3>
+                <h4 class="menu-price" th:text="${menu.getPrice()}"></h4>
+                <h4 class="menu-categorize" th:text="${menu.getCategorize()}"></h4>
             </div>
-            <form method="POST" th:action="@{/order/oneCart}">
-                <input type="hidden" name="name" th:value="${menu.getBookName()}"/>
-                <button th:if="${session.user != null}">구매하기</button>
-            </form>
         </div>
-        <div th:if="${row.count % 5 == 0}"></div>
     </div>
 </nav>
 </body>

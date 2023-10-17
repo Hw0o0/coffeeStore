@@ -8,7 +8,7 @@ import java.util.Date;
 @Data
 public class IngredientRegistrationRequestDto {
         private String name;
-        private int amount;
+        private Integer amount;
         private String unit;
 
     public Ingredient toEntity() {
@@ -16,6 +16,7 @@ public class IngredientRegistrationRequestDto {
                 .name(name)
                 .amount(amount)
                 .unit(unit)
+                .state(1)
                 .createdDate(new Date())
                 .build();
     }

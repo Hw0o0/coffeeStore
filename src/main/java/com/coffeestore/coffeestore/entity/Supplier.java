@@ -35,8 +35,8 @@ public class Supplier {
     private Date modificationDate;
 
     public void update(SupplierUpdateRequestDto supplierUpdateRequestDto){
-        this.name = supplierUpdateRequestDto.getName();
-        this.address = supplierUpdateRequestDto.getAddress();
+        this.name = supplierUpdateRequestDto.getUpdateName();
+        this.address = supplierUpdateRequestDto.getUpdateAddress();
         this.modificationDate = new Date();
     }
 }

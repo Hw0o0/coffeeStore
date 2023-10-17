@@ -12,7 +12,7 @@ import java.util.Optional;
 @Builder
 public class RecipeRegistrationRequestDto {
 
-    private int amount;
+    private Integer amount;
 
     public Recipe toEntity(Optional<Menu> menu, Optional<Ingredient> ingredient){
         return Recipe.builder()

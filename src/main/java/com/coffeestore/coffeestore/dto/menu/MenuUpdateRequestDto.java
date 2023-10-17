@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class MenuUpdateRequestDto {
-    private String name;
+    private String updateName;
 
-    private int price;
+    private Integer updatePrice;
 
-    private String categorize;
+    private String updateCategorize;
 }

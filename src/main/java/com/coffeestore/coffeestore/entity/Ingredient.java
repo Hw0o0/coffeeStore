@@ -27,7 +27,7 @@ public class Ingredient {
     private String unit;
 
     @Column(nullable = false)
-    private int amount;
+    private Integer amount;
 
     @Column(nullable = false)
     private int state;
@@ -39,9 +39,9 @@ public class Ingredient {
     private Date modificationDate;
 
     public void update(IngredientUpdateRequestDto ingredientUpdateRequestDto){
-        this.name = ingredientUpdateRequestDto.getName();
-        this.amount = ingredientUpdateRequestDto.getAmount();
-        this.unit = ingredientUpdateRequestDto.getUnit();
+        this.name = ingredientUpdateRequestDto.getUpdateName();
+        this.amount = ingredientUpdateRequestDto.getUpdateAmount();
+        this.unit = ingredientUpdateRequestDto.getUpdateUnit();
         this.modificationDate = new Date();
     }
 }

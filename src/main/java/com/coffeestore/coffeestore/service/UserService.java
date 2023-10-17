@@ -8,9 +8,7 @@ import com.coffeestore.coffeestore.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.Date;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +24,9 @@ public class UserService {
     public User findByUser(Long id){
         Optional<User> user = userRepository.findById(id);
         return user.orElse(null);
+    }
+    public Optional<User> findByNameAndPhoneNumber(LoginReqDto loginReqDto){
+        return userRepository.findByNameAndPhoneNumber(loginReqDto.getName(), Integer.parseInt(loginReqDto.getPhoneNumber()));
     }
     public void createByUser(UserRegistrationRequestDto userRegistrationRequestDto){
         Optional<User> userCheck = userRepository.findByPhoneNumber(userRegistrationRequestDto.getPhoneNumber());
@@ -46,7 +47,17 @@ public class UserService {
         userRepository.save(user);
     }
     public boolean login(LoginReqDto loginReqDto){
-        Optional<User> user = userRepository.findByNameAndPhoneNumber(loginReqDto.getName(),loginReqDto.getPhoneNumber());
+        Optional<User> user = userRepository.findByNameAndPhoneNumber(loginReqDto.getName(), Integer.parseInt(loginReqDto.getPhoneNumber()));
         return user.isPresent();
     }
+
+    public void stateChangeByUser(Long userId) {
+            User user = findByUser(userId);
+            if(user.getState() == 0){
+                user.setState(1);
+            }else {
+                user.setState(0);
+            }
+            userRepository.save(user);
+        }
 }

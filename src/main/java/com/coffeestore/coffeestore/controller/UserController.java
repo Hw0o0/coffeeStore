@@ -25,6 +25,13 @@ public class UserController {
         model.addAttribute("users", userService.findByAll());
         return "/management/userManagement";
     }
+    @GetMapping("/userSearch")
+    public String userSearch(Model mode,@RequestParam("userName")String userName){
+        User user = userService.findByName(userName);
+        Model model = mode.addAttribute("userInfo",user);
+        return "redirect:/management/userManagement";
+    }
+
     @PostMapping("/login")
     public String login(LoginReqDto loginReqDto, HttpSession session) {
         boolean checked = userService.login(loginReqDto);

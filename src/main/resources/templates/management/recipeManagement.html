@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>레시피 관리</title>
+</head>
+<body>
+<header>
+  <div>
+    <a href="/home">
+      <img src="/images/logo.png" alt="">
+    </a>
+  </div>
+  <ul>
+    <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
+    <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
+      <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
+    <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
+    <li><a th:if="${session.user != null}" href="/orderCart/myOrderCart">나의 장바구니</a></li>
+    <li><a th:unless="${session.user != null}" href="/home/userRegistration">레시피 가입</a></li>
+    <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
+  </ul>
+
+    <form method="POST" th:action="@{/recipe/recipeSearch}" id="recipeSearch">
+        <label for="recipeName">재료명 : </label>
+        <input type="text" name="recipeName" id="recipeName" placeholder="찾으시는 재료명을 입력하세요">
+        <label for="recipeUnit">단위 : </label>
+        <input type="text" name="recipeUnit" id="recipeUnit" placeholder="필요하신 단위를 입력하세요">
+        <button type="submit">검색</button>
+    </form>
+</header>
+
+<!-- 재료 정보 표시 -->
+<h3 class="ingredient-name" th:text="${ingredientSearch.getName()}"></h3>
+<h4 class="ingredient-unit" th:text="${ingredientSearch.getUnit}"></h4>
+
+<form method="POST" th:action="@{/recipe/addIngredient}">
+  <input type ="hidden" name="ingredientId" th:value="${ingredientSearch.id}"/>
+  <input type="submit" value="레시피 재료 추가">
+  <a th:href="@{/recipe/backView}" type = "button">돌아가기</a>
+</form>
+
+<nav>
+  <div>
+    <div>
+      <h3>레시피 관리</h3>
+    </div>
+    <div>
+      <div th:each="recipe: ${recipes}">
+        <div class="recipe">
+          <div>
+            <h3 class="recipe-name" th:text="${recipe.getName()}"></h3>
+            <h4 class="recipe-unit" th:text="${recipe.getUnit()}"></h4>
+          </div>
+
+          <form th:method="patch" th:action = "@{/recipe/update}" id="menuUpdate">
+            <input type ="hidden" name="recipeId" th:value="${recipe.getId()}"/>
+            <label for="updateName">재료명 : </label>
+            <input type="text" name="updateName" id="updateName"/><br/>
+            <label for="updateUnit">단위 : </label>
+            <input type="text" name="updateUnit" id="updateUnit"/><br/>
+
+            <input type="submit" value="레시피 정보 수정">
+          </form>
+
+          <form th:method="delete" th:action = "@{/recipe/delete}" id="recipeDelete">
+            <input type ="hidden" name="recipeId" th:value="${recipe.getId()}"/>
+            <input type="submit" value="레시피 정보 삭제">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+</body>
+</html>

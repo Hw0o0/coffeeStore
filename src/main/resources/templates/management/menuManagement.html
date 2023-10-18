@@ -66,11 +66,7 @@
                   <h4 class="menu-state" th:text="${menu.getState() == 0 ? '비활성화':'활성화'}"></h4>
                 </div>
 
-                <form method="GET" th:action = "@{/recipe}" id="recipe">
-                  <input type ="hidden" name="menuId" th:value="${menu.getId()}"/>
-                  <input type="submit" value="레시피 관리">
-                </form>
-
+                <h4>메뉴 수정</h4>
                 <form th:method="patch" th:action = "@{/menu/update}" id="menuUpdate">
                   <input type ="hidden" name="menuId" th:value="${menu.getId()}"/>
                   <label for="updateName">이름 : </label>
@@ -80,6 +76,11 @@
                   <label for="updateCategorize">카테고리 : </label>
                   <input type="text" name="updateCategorize" id="updateCategorize"/><br/>
                   <input type="submit" value="메뉴 정보 수정">
+                </form>
+
+                <form method="GET" th:action = "@{/recipe}" id="recipe">
+                  <input type ="hidden" name="menuId" th:value="${menu.getId()}"/>
+                  <input type="submit" value="레시피 관리">
                 </form>
 
                 <form th:method="delete" th:action = "@{/menu/delete}" id="menuDelete">

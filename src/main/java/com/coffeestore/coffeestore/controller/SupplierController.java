@@ -2,12 +2,15 @@ package com.coffeestore.coffeestore.controller;
 
 import com.coffeestore.coffeestore.dto.supplier.SupplierRegistrationRequestDto;
 import com.coffeestore.coffeestore.dto.supplier.SupplierUpdateRequestDto;
+import com.coffeestore.coffeestore.entity.Supplier;
 import com.coffeestore.coffeestore.service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -18,6 +21,13 @@ public class SupplierController {
     @GetMapping
     public String supplierManagement(Model model){
         model.addAttribute("suppliers", supplierService.findByAll());
+        return "/management/supplierManagement";
+    }
+    @GetMapping("/supplierSearch")
+    public String supplierSearch(Model model,@RequestParam("supplierName")String supplierName){
+        List<Supplier> suppliers = new ArrayList<>();
+        suppliers.add(supplierService.findByName(supplierName));
+        model.addAttribute("suppliers",suppliers);
         return "/management/supplierManagement";
     }
 

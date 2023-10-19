@@ -20,7 +20,7 @@
     <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
     <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
     <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
     <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
     <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
   </ul>
@@ -35,7 +35,7 @@
   </form>
 
   <div>
-    <form method="POST" th:action="@{/supplier/supplierSearch}" id="supplierSearch">
+    <form method="GET" th:action="@{/supplier/supplierSearch}" id="supplierSearch">
       <div>
         <label>
           <input type="text" name="supplierName" placeholder="찾으시는 공급업체명을 입력하세요">

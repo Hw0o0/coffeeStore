@@ -2,11 +2,15 @@ package com.coffeestore.coffeestore.controller;
 
 import com.coffeestore.coffeestore.dto.ingredient.IngredientRegistrationRequestDto;
 import com.coffeestore.coffeestore.dto.ingredient.IngredientUpdateRequestDto;
+import com.coffeestore.coffeestore.entity.Ingredient;
 import com.coffeestore.coffeestore.service.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -18,6 +22,13 @@ public class IngredientController {
     @GetMapping
     public String ingredientManagement(Model model){
         model.addAttribute("ingredients", ingredientService.findByAll());
+        return "/management/ingredientManagement";
+    }
+    @GetMapping("/ingredientSearch")
+    public String ingredientSearch(Model model,@RequestParam("ingredientName")String ingredientName){
+        List<Ingredient> ingredients = new ArrayList<>();
+        ingredients.add(ingredientService.findByName(ingredientName));
+        model.addAttribute("ingredients",ingredients);
         return "/management/ingredientManagement";
     }
 

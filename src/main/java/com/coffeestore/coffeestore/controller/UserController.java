@@ -11,6 +11,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -26,10 +28,11 @@ public class UserController {
         return "/management/userManagement";
     }
     @GetMapping("/userSearch")
-    public String userSearch(Model mode,@RequestParam("userName")String userName){
-        User user = userService.findByName(userName);
-        Model model = mode.addAttribute("userInfo",user);
-        return "redirect:/management/userManagement";
+    public String userSearch(Model model,@RequestParam("userName")String userName){
+        List<User> users = new ArrayList<>();
+        users.add(userService.findByName(userName));
+        model.addAttribute("users",users);
+        return "/management/userManagement";
     }
 
     @PostMapping("/login")

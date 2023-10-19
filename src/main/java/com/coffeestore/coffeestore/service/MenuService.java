@@ -26,6 +26,10 @@ public class MenuService {
         Optional<Menu> menu = menuRepository.findById(id);
         return menu.orElse(null);
     }
+    public Menu findByName(String menuName){
+        Optional<Menu> menu = menuRepository.findByName(menuName);
+        return menu.get();
+    }
 
     public void createByMenu(MenuRegistrationRequestDto menuRegistrationRequestDto){
         Optional<Menu> menuCheck = menuRepository.findByName(menuRegistrationRequestDto.getName());

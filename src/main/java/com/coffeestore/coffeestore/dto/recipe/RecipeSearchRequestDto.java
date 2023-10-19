@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class RecipeSearchRequestDto {
-    private String name;
-    private String unit;
+    private String ingredientName;
+    private String ingredientUnit;
 }

@@ -6,7 +6,6 @@ import com.coffeestore.coffeestore.entity.Recipe;
 import lombok.Builder;
 import lombok.Data;
 
-import java.util.Optional;
 
 @Data
 @Builder
@@ -14,10 +13,10 @@ public class RecipeRegistrationRequestDto {
 
     private Integer amount;
 
-    public Recipe toEntity(Optional<Menu> menu, Optional<Ingredient> ingredient){
+    public static Recipe toEntity(Menu menu, Ingredient ingredient,Integer amount){
         return Recipe.builder()
-                .menu(menu.get())
-                .ingredient(ingredient.get())
+                .menu(menu)
+                .ingredient(ingredient)
                 .amount(amount)
                 .build();
     }

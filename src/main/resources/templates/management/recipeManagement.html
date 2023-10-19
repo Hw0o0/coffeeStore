@@ -25,21 +25,24 @@
     <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
   </ul>
 
-    <form method="POST" th:action="@{/recipe/recipeSearch}" id="recipeSearch">
-        <label for="recipeName">재료명 : </label>
-        <input type="text" name="recipeName" id="recipeName" placeholder="찾으시는 재료명을 입력하세요">
-        <label for="recipeUnit">단위 : </label>
-        <input type="text" name="recipeUnit" id="recipeUnit" placeholder="필요하신 단위를 입력하세요">
+    <form method="GET" th:action="@{/recipe/ingredientSearch}" id="ingredientSearch">
+        <label for="ingredientName">재료명 : </label>
+        <input type="text" name="ingredientName" id="ingredientName" placeholder="찾으시는 재료명을 입력하세요">
+        <label for="ingredientUnit">단위 : </label>
+        <input type="text" name="ingredientUnit" id="ingredientUnit" placeholder="필요하신 단위를 입력하세요">
+        <input type ="hidden" name="menuId" th:value="${menuId}"/>
         <button type="submit">검색</button>
     </form>
 </header>
 
-<!-- 재료 정보 표시 -->
-<h3 class="ingredient-name" th:text="${ingredientSearch.getName()}"></h3>
-<h4 class="ingredient-unit" th:text="${ingredientSearch.getUnit}"></h4>
-
-<form method="POST" th:action="@{/recipe/addIngredient}">
-  <input type ="hidden" name="ingredientId" th:value="${ingredientSearch.id}"/>
+<form method="GET" th:action="@{/recipe/addIngredient}">
+  <!-- 재료 정보 표시 -->
+  <h3 class="ingredient-name" th:text="${ingredient.getName()}" th:if="${ingredient != null}"></h3>
+  <h4 class="ingredient-unit" th:text="${ingredient.getUnit()}" th:if="${ingredient != null}"></h4>
+  <label for="amount"></label>
+  <input type="text" name="amount" id="amount" placeholder="레시피에 필요한 양만큼 입력하세요" th:if="${ingredient != null}">
+  <input type ="hidden" name="ingredientId" th:value="${ingredient.getId()}" th:if="${ingredient != null}"/>
+  <input type ="hidden" name="menuId" th:value="${menuId}" th:if="${ingredient != null}"/>
   <input type="submit" value="레시피 재료 추가">
   <a th:href="@{/recipe/backView}" type = "button">돌아가기</a>
 </form>
@@ -50,11 +53,11 @@
       <h3>레시피 관리</h3>
     </div>
     <div>
-      <div th:each="recipe: ${recipes}">
+      <div th:each="recipe: ${recipes}" th:if="${recipes.size() > 0}">
         <div class="recipe">
           <div>
-            <h3 class="recipe-name" th:text="${recipe.getName()}"></h3>
-            <h4 class="recipe-unit" th:text="${recipe.getUnit()}"></h4>
+            <h3 class="recipe-name" th:text="${recipe.getIngredient().getName()}"></h3>
+            <h4 class="recipe-unit" th:text="${recipe.getIngredient().getUnit()}"></h4>
           </div>
 
           <form th:method="patch" th:action = "@{/recipe/update}" id="menuUpdate">

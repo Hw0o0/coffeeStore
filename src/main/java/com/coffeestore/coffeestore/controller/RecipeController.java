@@ -1,40 +1,46 @@
 package com.coffeestore.coffeestore.controller;
 
-import com.coffeestore.coffeestore.dto.recipe.RecipeRegistrationRequestDto;
 import com.coffeestore.coffeestore.dto.recipe.RecipeSearchRequestDto;
 import com.coffeestore.coffeestore.entity.Ingredient;
 import com.coffeestore.coffeestore.entity.Menu;
-import com.coffeestore.coffeestore.entity.Recipe;
 import com.coffeestore.coffeestore.service.IngredientService;
+import com.coffeestore.coffeestore.service.MenuService;
 import com.coffeestore.coffeestore.service.RecipeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/recipe")
 public class RecipeController {
 
     private final RecipeService recipeService;
 
     private final IngredientService ingredientService;
+
+    private final MenuService menuService;
     @GetMapping
     public String recipeManagement(@RequestParam("menuId")Long menuId, Model model){
+        model.addAttribute("menuId",menuId);
         model.addAttribute("recipes", recipeService.findByMenuUseAll(menuId));
         return "/management/recipeManagement";
     }
-    @PostMapping("/recipeSearch")
-    public String searchByRecipe(Model model, RecipeSearchRequestDto recipeSearchRequestDto) {
-        ingredientService.ingredientSearch(model,recipeSearchRequestDto);
-        return "redirect:/recipe";
+    @GetMapping("/ingredientSearch")
+    public String ingredientSearch(Model model, RecipeSearchRequestDto recipeSearchRequestDto, @RequestParam("menuId")Long menuId){
+        Optional<Ingredient> ingredient = ingredientService.ingredientSearch(recipeSearchRequestDto);
+        model.addAttribute("ingredient", ingredient.get());
+        model.addAttribute("recipes", recipeService.findByMenuUseAll(menuId));
+        model.addAttribute("menuId",menuId);
+        return "/management/recipeManagement";
     }
 
     @RequestMapping("/backView")
@@ -42,11 +48,14 @@ public class RecipeController {
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
     }
-    @PostMapping("/addIngredient")
-    public String addByIngredient(Model model,@RequestParam("ingredientId")Long ingredientId, RecipeRegistrationRequestDto recipeRegistrationRequestDto){
+    @GetMapping("/addIngredient")
+    public String addByIngredient(Model model,Integer amount,@RequestParam("ingredientId")Long ingredientId,@RequestParam("menuId")Long menuId){
         Ingredient ingredient = ingredientService.findByIngredient(ingredientId);
-        Menu menu = (Menu) model.getAttribute("menu");
-        recipeService.createByRecipe(menu.getId(),ingredientId,recipeRegistrationRequestDto);
-        return "redirect:/recipe";
+        Menu menu = menuService.findByMenu(menuId);
+        recipeService.createByRecipe(menu,ingredient,amount);
+        model.addAttribute("recipes", recipeService.findByMenuUseAll(menuId));
+        model.addAttribute("menuId",menuId);
+        model.addAttribute("ingredient",new Ingredient());
+        return "/management/recipeManagement";
     }
 }

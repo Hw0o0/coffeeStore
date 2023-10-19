@@ -2,11 +2,15 @@ package com.coffeestore.coffeestore.controller;
 
 import com.coffeestore.coffeestore.dto.menu.MenuRegistrationRequestDto;
 import com.coffeestore.coffeestore.dto.menu.MenuUpdateRequestDto;
+import com.coffeestore.coffeestore.entity.Menu;
 import com.coffeestore.coffeestore.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/menu")
@@ -17,6 +21,13 @@ public class MenuController {
     @GetMapping
     public String menuManagement(Model model){
         model.addAttribute("menus",menuService.findByAll());
+        return "/management/menuManagement";
+    }
+    @GetMapping("/menuSearch")
+    public String menuSearch(Model model,@RequestParam("menuName")String menuName){
+        List<Menu> menus = new ArrayList<>();
+        menus.add(menuService.findByName(menuName));
+        model.addAttribute("menus",menus);
         return "/management/menuManagement";
     }
     @PostMapping("/registration")

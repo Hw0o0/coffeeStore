@@ -28,6 +28,10 @@ public class SupplierService {
         Optional<Supplier> supplier = supplierRepository.findById(id);
         return supplier.orElse(null);
     }
+    public Supplier findByName(String supplierName) {
+        Optional<Supplier> supplier = supplierRepository.findByName(supplierName);
+        return supplier.get();
+    }
 
     public void createBySupplier(SupplierRegistrationRequestDto supplierRegistrationDto) {
         Supplier supplier = supplierRegistrationDto.toEntity();
@@ -65,4 +69,6 @@ public class SupplierService {
         }
         supplierRepository.save(supplier);
     }
+
+
 }

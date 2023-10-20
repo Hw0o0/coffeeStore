@@ -29,6 +29,6 @@ public class Recipe {
 
 
     public void update(RecipeUpdateRequestDto recipeUpdateRequestDto) {
-        this.amount = recipeUpdateRequestDto.getAmount();
+        this.amount = recipeUpdateRequestDto.getUpdateAmount();
     }
 }

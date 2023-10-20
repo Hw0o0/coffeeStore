@@ -4,6 +4,5 @@ import lombok.Data;
 
 @Data
 public class RecipeUpdateRequestDto {
-
-    private Integer amount;
+    private Integer updateAmount;
 }

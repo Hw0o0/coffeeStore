@@ -16,7 +16,7 @@
     <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
       <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
     <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
-    <li><a th:if="${session.user != null}" href="/orderCart/myOrderCart">나의 장바구니</a></li>
+    <li><a th:if="${session.user != null}" href="/orderCart">나의 장바구니</a></li>
     <li><a th:unless="${session.user != null}" href="/home/userRegistration">레시피 가입</a></li>
     <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
     <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
@@ -58,20 +58,20 @@
           <div>
             <h3 class="recipe-name" th:text="${recipe.getIngredient().getName()}"></h3>
             <h4 class="recipe-unit" th:text="${recipe.getIngredient().getUnit()}"></h4>
+            <h4 class="recipe-unit" th:text="${recipe.getAmount()}" th:if="${recipe.getAmount() != null}"></h4>
           </div>
 
           <form th:method="patch" th:action = "@{/recipe/update}" id="menuUpdate">
             <input type ="hidden" name="recipeId" th:value="${recipe.getId()}"/>
-            <label for="updateName">재료명 : </label>
-            <input type="text" name="updateName" id="updateName"/><br/>
-            <label for="updateUnit">단위 : </label>
-            <input type="text" name="updateUnit" id="updateUnit"/><br/>
-
+            <input type ="hidden" name="menuId" th:value="${menuId}"/>
+            <label for="updateAmount">수량 : </label>
+            <input type="text" name="updateAmount" id="updateAmount"/>
             <input type="submit" value="레시피 정보 수정">
           </form>
 
           <form th:method="delete" th:action = "@{/recipe/delete}" id="recipeDelete">
             <input type ="hidden" name="recipeId" th:value="${recipe.getId()}"/>
+            <input type ="hidden" name="menuId" th:value="${menuId}"/>
             <input type="submit" value="레시피 정보 삭제">
           </form>
         </div>

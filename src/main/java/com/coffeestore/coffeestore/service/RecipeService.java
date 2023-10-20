@@ -5,8 +5,6 @@ import com.coffeestore.coffeestore.dto.recipe.RecipeUpdateRequestDto;
 import com.coffeestore.coffeestore.entity.Ingredient;
 import com.coffeestore.coffeestore.entity.Menu;
 import com.coffeestore.coffeestore.entity.Recipe;
-import com.coffeestore.coffeestore.repository.IngredientRepository;
-import com.coffeestore.coffeestore.repository.MenuRepository;
 import com.coffeestore.coffeestore.repository.RecipeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,8 +34,8 @@ public class RecipeService {
         Recipe recipe = RecipeRegistrationRequestDto.toEntity(menu,ingredient,amount);
         recipeRepository.save(recipe);
     }
-    public void updateByRecipe(Long id, RecipeUpdateRequestDto recipeUpdateRequestDto){
-       Recipe recipe = findByRecipe(id);
+    public void updateByRecipe(Long recipeId, RecipeUpdateRequestDto recipeUpdateRequestDto){
+        Recipe recipe = findByRecipe(recipeId);
         recipe.update(recipeUpdateRequestDto);
         recipeRepository.save(recipe);
     }

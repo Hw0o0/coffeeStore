@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>장바구니 관리</title>
+</head>
+<body>
+<header>
+  <div>
+    <a href="/home">
+      <img src="/images/logo.png" alt="">
+    </a>
+  </div>
+  <ul>
+    <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
+    <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
+      <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
+    <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
+    <li><a th:if="${session.user != null}" href="/orderCart">나의 장바구니</a></li>
+    <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
+    <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
+    <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
+  </ul>
+</header>
+
+<nav>
+  <div>
+    <div>
+      <h3>장바구니 관리</h3>
+    </div>
+    <form method="GET" th:action="@{/order}">
+      <input type="hidden" name="orderCartList" th:value="orderCarts">
+      <input type="submit" value="주문 하기">
+      <a th:href="@{/home}" type = "button">돌아가기</a>
+    </form>
+
+
+    <div th:each="cart: ${orderCarts}">
+      <div class="cart">
+        <div>
+          <label>메뉴명 : </label>
+          <h3 class="cart-name" th:text="${cart.getMenu().getName()}"></h3>
+          <label>가격 : </label>
+          <h4 class="cart-price" th:text="${cart.getMenu().getPrice()}"></h4>
+          <label>카테고리 : </label>
+          <h4 class="cart-categorize" th:text="${cart.getMenu().getCategorize()}"></h4>
+          <label>수량 : </label>
+          <h4 class="cart-amount" th:text="${cart.getAmount()}"></h4>
+
+          <form th:method="patch" th:action = "@{/orderCart/update}" id="cartUpdate">
+            <input type ="hidden" name="cartId" th:value="${cart.getId()}"/>
+            <label for="updateAmount">구매 수량 : </label>
+            <input type="number" name="updateAmount" id="updateAmount"/><br/>
+            <input type="submit" value="장바구니 수량 수정">
+          </form>
+
+          <form th:method="delete" th:action = "@{/orderCart/delete}" id="cartDelete">
+            <input type ="hidden" name="cartId" th:value="${cart.getId()}"/>
+            <input type="submit" value="장바구니 삭제">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+</body>
+</html>

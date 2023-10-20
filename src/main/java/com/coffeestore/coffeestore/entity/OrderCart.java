@@ -21,7 +21,7 @@ public class OrderCart {
     private Menu menu;
 
     @Column(nullable = false)
-    private int amount;
+    private Integer amount;
 
     @Column(nullable = false)
     private int state;

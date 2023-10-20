@@ -16,7 +16,7 @@
         <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
             <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
         <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
-        <li><a th:if="${session.user != null}" href="/orderCart/myOrderCart">나의 장바구니</a></li>
+        <li><a th:if="${session.user != null}" href="/orderCart">나의 장바구니</a></li>
         <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
         <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
         <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
@@ -42,9 +42,17 @@
     <div th:each="menu: ${menus}">
         <div class="menu">
             <div>
-                <h3 class="menu-name" th:text="${menu.getName()}"></h3>
-                <h4 class="menu-price" th:text="${menu.getPrice()}"></h4>
-                <h4 class="menu-categorize" th:text="${menu.getCategorize()}"></h4>
+                    <label>메뉴명 : </label>
+                    <h3 class="menu-name" th:text="${menu.getName()}"></h3>
+                    <label>가격 : </label>
+                    <h4 class="menu-price" th:text="${menu.getPrice()}"></h4>
+                    <label>카테고리 : </label>
+                    <h4 class="menu-categorize" th:text="${menu.getCategorize()}"></h4>
+                <form method="POST" th:action="@{/orderCart/registration}">
+                    <input type="hidden" name="menuId" th:value="${menu.getId()}">
+                    <input type="submit" value="장바구니 등록"/>
+                    <a th:href="@{/home}" type = "button">돌아가기</a>
+                </form>
             </div>
         </div>
     </div>

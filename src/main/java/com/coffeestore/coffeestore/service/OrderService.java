@@ -66,6 +66,7 @@ public class OrderService {
         }
         orderCartRepository.saveAll(orderCarts);
     }
+
     //메뉴에 사용된 재료로 인한 재료 수량 수정 메소드
     public void menuUsedRecipeMinus(OrderCart orderCart){
         List<Recipe> recipes = recipeRepository.findAll()

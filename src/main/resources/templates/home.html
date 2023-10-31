@@ -23,17 +23,16 @@
         <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
         <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
         <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
+        <li><a th:if="${session.user != null}" href="/order">공급 관리</a></li>
     </ul>
-    <div>
-        <form method="POST" th:action="@{/menu/bookSearch}" id="menuSearch">
-            <div>
-                <label>
-                    <input type="text" name="menuName" placeholder="찾으시는 메뉴명을 입력하세요">
-                </label>
-                <button type="submit">검색</button>
-            </div>
-        </form>
-    </div>
+    <form method="GET" th:action="@{/menu/menuSearch}" id="menuSearch">
+        <div>
+            <label>
+                <input type="text" name="menuName" placeholder="찾으시는 메뉴명을 입력하세요">
+            </label>
+            <button type="submit">검색</button>
+        </div>
+    </form>
 </header>
 
 <nav>
@@ -48,6 +47,11 @@
                     <h4 class="menu-price" th:text="${menu.getPrice()}"></h4>
                     <label>카테고리 : </label>
                     <h4 class="menu-categorize" th:text="${menu.getCategorize()}"></h4>
+                <form method="GET" th:action="@{/menu/menuDetail}">
+                    <input type="hidden" name="menuId" th:value="${menu.getId()}">
+                    <input type="submit" value="상세보기"/>
+                </form>
+
                 <form method="POST" th:action="@{/orderCart/registration}">
                     <input type="hidden" name="menuId" th:value="${menu.getId()}">
                     <input type="submit" value="장바구니 등록"/>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>메뉴 상세 정보</title>
+</head>
+<body>
+<header>
+    <div>
+        <a href="/home">
+            <img src="/images/logo.png" alt="">
+        </a>
+    </div>
+    <ul>
+        <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
+        <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
+            <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
+        <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
+        <li><a th:if="${session.user != null}" href="/orderCart">나의 장바구니</a></li>
+        <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
+        <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
+        <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
+        <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
+        <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
+        <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
+    </ul>
+</header>
+<div>
+    <h3>메뉴 상세 정보</h3>
+</div>
+<label>메뉴명 : </label>
+<h3 class="menu-name" th:text="${menu.getName()}"></h3>
+<label>가격 : </label>
+<h4 class="menu-price" th:text="${menu.getPrice()}"></h4>
+<label>카테고리 : </label>
+<h4 class="menu-categorize" th:text="${menu.getCategorize()}"></h4>
+<label>등록일 : </label>
+<h4 class="menu-createdAt" th:text="${menu.getCreatedDate()}"></h4>
+
+<form method="GET" th:action="@{/order/purchase}">
+    <input type="hidden" name="menuId" th:value="${menu.getId()}">
+    <input type="submit" value="구매하기"/>
+</form>
+
+<div>
+    <h3>메뉴 레시피</h3>
+</div>
+<div th:each="usedRecipe: ${recipeList}">
+    <div>
+        <label>사용 재료명 : </label>
+        <h3 class="recipe-name" th:text="${usedRecipe.getMenu().getName()}"></h3>
+        <label>사용량 : </label>
+        <h4 class="recipe-amount" th:text="${usedRecipe.getAmount()}"></h4>
+    </div>
+</div>
+
+</body>
+</html>

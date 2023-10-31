@@ -3,7 +3,9 @@ package com.coffeestore.coffeestore.controller;
 import com.coffeestore.coffeestore.dto.menu.MenuRegistrationRequestDto;
 import com.coffeestore.coffeestore.dto.menu.MenuUpdateRequestDto;
 import com.coffeestore.coffeestore.entity.Menu;
+import com.coffeestore.coffeestore.entity.Recipe;
 import com.coffeestore.coffeestore.service.MenuService;
+import com.coffeestore.coffeestore.service.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import java.util.List;
 public class MenuController {
 
     private final MenuService menuService;
+    private final RecipeService recipeService;
     @GetMapping
     public String menuManagement(Model model){
         model.addAttribute("menus",menuService.findByAll());
@@ -49,5 +52,13 @@ public class MenuController {
     public String menuDelete(@RequestParam("menuId") Long menuId){
         menuService.deleteByMenu(menuId);
         return "redirect:/menu";
+    }
+    @GetMapping("/menuDetail")
+    public String menuDetailView(Model model,@RequestParam("menuId")Long menuId){
+        Menu menu = menuService.findByMenu(menuId);
+        List<Recipe> recipeList = new ArrayList<>();
+        recipeList = recipeService.findByMenuUseAll(menuId);
+        model.addAttribute(menu).addAttribute(recipeList);
+        return "menuDetailsInfo";
     }
 }

@@ -46,9 +46,13 @@
       <div th:each="user: ${users}">
         <div class="user">
           <div>
+            <label>이름 : </label>
             <h3 class="user-name" th:text="${user.getName()}"></h3>
+            <label>주소 : </label>
             <h4 class="user-address" th:text="${user.getAddress()}"></h4>
+            <label>전화번호 : </label>
             <h4 class="user-phoneNumber" th:text="${user.getPhoneNumber()}"></h4>
+            <label>상태 : </label>
             <h4 class="user-state" th:text="${user.getState() == 0 ? '비활성화':'활성화'}"></h4>
           </div>
 

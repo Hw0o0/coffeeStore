@@ -60,9 +60,13 @@
             <div th:each="menu: ${menus}">
               <div class="menu">
                 <div>
+                  <label>이름 : </label>
                   <h3 class="menu-name" th:text="${menu.getName()}"></h3>
+                  <label>가격 : </label>
                   <h4 class="menu-price" th:text="${menu.getPrice()}"></h4>
+                  <label>카테고리 : </label>
                   <h4 class="menu-categorize" th:text="${menu.getCategorize()}"></h4>
+                  <label>상태 : </label>
                   <h4 class="menu-state" th:text="${menu.getState() == 0 ? '비활성화':'활성화'}"></h4>
                 </div>
 

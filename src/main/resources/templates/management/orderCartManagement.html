@@ -31,13 +31,6 @@
     <div>
       <h3>장바구니 관리</h3>
     </div>
-    <form method="GET" th:action="@{/order}">
-      <input type="hidden" name="orderCartList" th:value="orderCarts">
-      <input type="submit" value="주문 하기">
-      <a th:href="@{/home}" type = "button">돌아가기</a>
-    </form>
-
-
     <div th:each="cart: ${orderCarts}">
       <div class="cart">
         <div>
@@ -64,6 +57,10 @@
         </div>
       </div>
     </div>
+    <form method="GET" th:action="@{/order/orderPage}">
+      <input type="submit" value="주문 하기">
+      <a th:href="@{/home}" type = "button">돌아가기</a>
+    </form>
   </div>
 </nav>
 

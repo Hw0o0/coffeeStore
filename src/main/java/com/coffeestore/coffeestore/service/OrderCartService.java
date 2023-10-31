@@ -26,6 +26,9 @@ public class OrderCartService {
     private final MenuRepository menuRepository;
     private final OrderRepository orderRepository;
 
+    public List<OrderCart> findByAll(){
+        return orderCartRepository.findAll();
+    }
     //나의 주문하지않은 카트들
     public List<OrderCart> findByUser(User user){
         return orderCartRepository.findAll()
@@ -60,7 +63,7 @@ public class OrderCartService {
         }
     }
 
-    public void createByOrderCart(HttpServletRequest request, Long menuId) {
+    public OrderCart createByOrderCart(HttpServletRequest request, Long menuId) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
         Optional<Menu> menu = menuRepository.findById(menuId);
@@ -68,21 +71,22 @@ public class OrderCartService {
 
         // 이미 동일한 메뉴가 장바구니에 있는지 확인
         Optional<OrderCart> orderCartCheck = orderCartRepository.findByMenuAndOrder_UserAndState(menu.get(), user, 1);
-
-        if (orderCartCheck.isPresent()) {
-            // 동일한 메뉴가 이미 장바구니에 있으면 수량만 증가시킴
-            OrderCart orderCartInfo = orderCartCheck.get();
-            orderCartInfo.setAmount(orderCartInfo.getAmount() + 1);
-            orderCartRepository.save(orderCartInfo);
-
-        } else {
-            // 동일한 메뉴가 없으면 새로운 OrderCart을 생성함.
-            OrderCart orderCart= new OrderCart();
-            orderCart.setOrder(order);
-            orderCart.setMenu(menu.get());
-            orderCart.setState(1);
-            orderCart.setAmount(1);
-            orderCartRepository.save(orderCart);
+        //장바구니 여러개 구매
+            if (orderCartCheck.isPresent()) {
+                // 동일한 메뉴가 이미 장바구니에 있으면 수량만 증가시킴
+                OrderCart orderCartInfo = orderCartCheck.get();
+                orderCartInfo.setAmount(orderCartInfo.getAmount() + 1);
+                orderCartRepository.save(orderCartInfo);
+                return orderCartInfo;
+            } else {
+                // 동일한 메뉴가 없으면 새로운 OrderCart을 생성함.
+                OrderCart orderCart = new OrderCart();
+                orderCart.setOrder(order);
+                orderCart.setMenu(menu.get());
+                orderCart.setState(1);
+                orderCart.setAmount(1);
+                orderCartRepository.save(orderCart);
+                return orderCart;
         }
     }
 

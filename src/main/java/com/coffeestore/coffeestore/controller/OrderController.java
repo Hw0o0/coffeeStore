@@ -2,39 +2,68 @@ package com.coffeestore.coffeestore.controller;
 
 import com.coffeestore.coffeestore.entity.Order;
 import com.coffeestore.coffeestore.entity.OrderCart;
-import com.coffeestore.coffeestore.repository.OrderRepository;
+import com.coffeestore.coffeestore.entity.User;
+import com.coffeestore.coffeestore.service.OrderCartService;
 import com.coffeestore.coffeestore.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Controller
 @RequestMapping("/order")
 @RequiredArgsConstructor
+@Slf4j
 public class OrderController {
 
     private final OrderService orderService;
-    private final OrderRepository orderRepository;
+    private final OrderCartService orderCartService;
 
     @GetMapping
-    public String orderView(Model model, @RequestParam("orderCartList") List<OrderCart> orderCartList) {
-        Order order = orderService.findByOrder(orderCartList.get(0).getOrder().getId());
-        //주문 금액 계산
-        int totalPrice = orderCartList.stream()
-                .mapToInt(orderCart -> orderCart.getMenu().getPrice() * orderCart.getAmount())
-                .sum();
-        // 총 주문금액 설정
-        order.setTotalPrice(totalPrice);
-        orderRepository.save(order);
-        //Order order = orderService.setTotalPrice(orderCartList);
-        model.addAttribute("orderCartList", orderCartList);
-        model.addAttribute("order",order);
+    public String findByAllOrder(Model model,HttpServletRequest request){
+        List<Order> orderList = orderService.findAll(request);
+        model.addAttribute(orderList);
+        return "management/orderManagement";
+    }
+    @GetMapping("/orderUserSearch")
+    public String orderUserSearch(Model model,@RequestParam("userName")String userName){
+        List<Order> orderList = orderService.findByOrderUsers(userName);
+        model.addAttribute("orderList",orderList);
         return "/management/orderManagement";
     }
-
+    //장박구니 여러개 주문버튼 누를시
+    @GetMapping("/orderPage")
+    public String orderView(Model model, HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
+        Order order = orderService.findByOrderCart(user);
+        List<OrderCart> orderCartList = orderService.createByOrderPage(order);
+        model.addAttribute(order).addAttribute(orderCartList);
+        return "orderPage";
+    }
+    @PostMapping("/menuOrder")
+    public String orderOk(String payMethod,Long orderId){
+        orderService.orderOk(payMethod,orderId);
+        return "redirect:/home";
+    }
+    //바로 구매버튼 누를시
+    @GetMapping("/purchase")
+    public String purchaseMenu(Model model,@RequestParam("menuId")Long menuId,HttpServletRequest request){
+        OrderCart orderCart =orderCartService.createByOrderCart(request,menuId);
+        Order order = orderService.findByOrderAndSetPrice(orderCart.getOrder().getId(),orderCart);
+        List<OrderCart> orderCartList = new ArrayList<>();
+        orderCartList.add(orderCart);
+        model.addAttribute(order).addAttribute(orderCartList);
+        return "orderPage";
+    }
 }

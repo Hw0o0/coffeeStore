@@ -55,8 +55,11 @@
       <div th:each="supplier: ${suppliers}">
         <div class="supplier">
           <div>
+            <label>이름 : </label>
             <h3 class="supplier-name" th:text="${supplier.getName()}"></h3>
+            <label>주소 : </label>
             <h4 class="supplier-address" th:text="${supplier.getAddress()}"></h4>
+            <label>상태 : </label>
             <h4 class="supplier-state" th:text="${supplier.getState() == 0 ? '비활성화':'활성화'}"></h4>
           </div>
 

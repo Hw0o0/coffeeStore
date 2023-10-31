@@ -1,29 +1,56 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>주문 페이지</title>
+    <meta charset="UTF-8">
+    <title>주문 관리</title>
 </head>
 <body>
-<div>
-    <h3>주문 정보 입력</h3>
-</div>
+    <header>
+        <div>
+            <a href="/home">
+                <img src="/images/logo.png" alt="">
+            </a>
+        </div>
+        <ul>
+            <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
+            <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
+                <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
+            <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
+            <li><a th:if="${session.user != null}" href="/orderCart">나의 장바구니</a></li>
+            <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
+            <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
+            <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
+            <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
+            <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
+            <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
+        </ul>
 
-<form method="POST" th:action="@{/order/menuOrder}">
-    <input type="text" name="payMethod" placeholder="지불 방식을 입력해주세요."/>
-    <br>
-    <div th:each="cart: ${orderCartList}">
-            <div>
-                <label>메뉴명 : </label>
-                <h3 class="cart-name" th:text="${cart.getMenu().getName()}"></h3>
-                <label>가격 : </label>
-                <h4 class="cart-price" th:text="${cart.getMenu().getPrice()}"></h4>
-                <label>수량 : </label>
-                <h4 class="cart-amount" th:text="${cart.getAmount()}"></h4>
+        <div>
+            <form method="GET" th:action="@{/order/orderUserSearch}" id="orderUserSearch">
+                <div>
+                    <label>
+                        <input type="text" name="userName" placeholder="찾으시는 주문 고객명을 입력하세요">
+                    </label>
+                    <button type="submit">검색</button>
+                </div>
+            </form>
+        </div>
+    </header>
+    <div>
+        <div th:each="order: ${orderList}">
+            <div class="order">
+                <div>
+                    <label>이름 : </label>
+                    <h3 class="order-userName" th:text="${order.getUser().getName()}"></h3>
+                    <label>지불방식 : </label>
+                    <h4 class="order-payMethod" th:text="${order.getPaymentMethod()}"></h4>
+                    <label>가격 : </label>
+                    <h4 class="order-totalPrice" th:text="${order.getTotalPrice()}"></h4>
+                    <label>주문날짜 : </label>
+                    <h4 class="order-createdAt" th:text="${order.getCreatedDate()}"></h4>
+                </div>
             </div>
+        </div>
     </div>
-    <div>상품 합계 :</div>
-    <input type="submit" value="주문하기"/>
-</form>
-
 </body>
 </html>

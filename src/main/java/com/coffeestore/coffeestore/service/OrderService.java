@@ -1,10 +1,6 @@
 package com.coffeestore.coffeestore.service;
 
-import com.coffeestore.coffeestore.dto.order.OrderRegistrationRequestDto;
-import com.coffeestore.coffeestore.entity.Ingredient;
-import com.coffeestore.coffeestore.entity.Order;
-import com.coffeestore.coffeestore.entity.OrderCart;
-import com.coffeestore.coffeestore.entity.Recipe;
+import com.coffeestore.coffeestore.entity.*;
 import com.coffeestore.coffeestore.repository.IngredientRepository;
 import com.coffeestore.coffeestore.repository.OrderCartRepository;
 import com.coffeestore.coffeestore.repository.OrderRepository;
@@ -12,7 +8,11 @@ import com.coffeestore.coffeestore.repository.RecipeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -28,8 +28,18 @@ public class OrderService {
 
     private final IngredientRepository ingredientRepository;
 
-    public List<Order> findAll(){
-        return orderRepository.findAll();
+    // 자신의 주문만 볼수 있게끔 함.
+    public List<Order> findAll(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        User user = (User) session.getAttribute("user");
+        String manager = "1";
+        if (manager.equals(user.getName())) {
+            return orderRepository.findAll();
+        } else {return orderRepository.findAll()
+                    .stream()
+                    .filter(order -> order.getUser().equals(user))
+                    .collect(Collectors.toList());
+        }
     }
 
     public Order findByOrder(Long id){
@@ -37,34 +47,18 @@ public class OrderService {
         return order.orElse(null);
     }
 
-    //주문하기 버튼을 눌렀을때 작동
-    public void createByOrder(Long id, OrderRegistrationRequestDto orderRegistrationRequestDto) {
-        //주문하지않은 상태인 cart
-        List<OrderCart> orderCarts = orderCartRepository.findAll()
-                .stream()
-                .filter(orderCart -> orderCart.getOrder().getUser().getId().equals(id) && orderCart.getState() == 1 && orderCart.getMenu().getState() == 1)
+    //orderView를 위한 메소드
+    public List<OrderCart> createByOrderPage(Order order) {
+        List<OrderCart> orderCartList = orderCartRepository.findAll().stream()
+                .filter(orderCart -> orderCart.getOrder().getId().equals(Objects.requireNonNull(order).getId()))
                 .collect(Collectors.toList());
-
-        // 총 가격 계산
-        int totalPrice = orderCarts.stream()
-                .mapToInt(OrderCart::getAmount)
+        //주문 금액 계산
+        int totalPrice = orderCartList.stream()
+                .mapToInt(orderCart -> orderCart.getMenu().getPrice() * orderCart.getAmount())
                 .sum();
-
-        //주문 ID 찾기
-        Long orderId = orderCarts.get(0).getId();
-        Optional<Order> order = orderRepository.findById(orderId);
-
-        //Order 완성해서 DB 저장
-        if(order.isPresent()) {
-            order.get().registration(orderRegistrationRequestDto);
-            orderRepository.save(order.get());
-        }
-        //cart 주문완료 상태로 변경
-        for (OrderCart cart : orderCarts) {
-            cart.setState(0);
-            menuUsedRecipeMinus(cart);
-        }
-        orderCartRepository.saveAll(orderCarts);
+        order.setTotalPrice(totalPrice);
+        orderRepository.save(order);
+        return orderCartList;
     }
 
     //메뉴에 사용된 재료로 인한 재료 수량 수정 메소드
@@ -87,5 +81,45 @@ public class OrderService {
         Order order = findByOrder(id);
         order.setState(0);
         orderRepository.save(order);
+    }
+    //주문
+    public Order findByOrderCart(User user){
+        return  orderRepository.findAll()
+                .stream()
+                .filter(orders -> orders.getUser().equals(user)&&orders.getState()==1)
+                .findFirst()
+                .orElse(null);
+    }
+
+    //주문 완료 시 시작하는 메소드
+    public void orderOk(String payMethod, Long orderId) {
+        Order order = findByOrder(orderId);
+        order.setPaymentMethod(payMethod);
+        order.setState(0);
+        order.setCreatedDate(new Date());
+        orderRepository.save(order);
+
+        List<OrderCart> orderCartList = orderCartRepository.findAll()
+                .stream()
+                .filter(orderCart -> orderCart.getOrder().getId().equals(order.getId()))
+                .collect(Collectors.toList());
+        for(OrderCart orderCart : orderCartList){
+            menuUsedRecipeMinus(orderCart);
+        }
+    }
+
+    public Order findByOrderAndSetPrice(Long orderId, OrderCart orderCart) {
+        Order order = findByOrder(orderId);
+        order.setTotalPrice(orderCart.getAmount()*orderCart.getMenu().getPrice());
+        orderRepository.save(order);
+        orderCart.setState(2);
+        orderCartRepository.save(orderCart);
+        return order;
+    }
+    public List<Order> findByOrderUsers(String userName) {
+        return orderRepository.findAll()
+                .stream()
+                .filter(order -> order.getUser().getName().equals(userName))
+                .collect(Collectors.toList());
     }
 }

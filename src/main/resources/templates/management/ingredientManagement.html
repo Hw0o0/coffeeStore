@@ -58,9 +58,13 @@
       <div th:each="ingredient: ${ingredients}">
         <div class="ingredient">
           <div>
+            <label>이름 : </label>
             <h3 class="ingredient-name" th:text="${ingredient.getName()}"></h3>
+            <label>단위 : </label>
             <h4 class="ingredient-unit" th:text="${ingredient.getUnit()}"></h4>
+            <label>재고량 : </label>
             <h4 class="ingredient-amount" th:text="${ingredient.getAmount()}"></h4>
+            <label>이름 : </label>
             <h4 class="ingredient-state" th:text="${ingredient.getState() == 0 ? '비활성화':'활성화'}"></h4>
           </div>
 
@@ -83,6 +87,11 @@
           <form th:method="patch" th:action = "@{/ingredient/state}" id="ingredientState">
             <input type ="hidden" name="ingredientId" th:value="${ingredient.getId()}"/>
             <input type="submit" value="재료 상태 변경">
+          </form>
+
+          <form th:method="POST" th:action = "@{/supplyDetail/supplyIngredient}" id="supplyIngredient">
+            <input type ="hidden" name="ingredientId" th:value="${ingredient.getId()}"/>
+            <input type="submit" value="공급 바구니 담기">
           </form>
         </div>
       </div>

@@ -1,7 +1,6 @@
 package com.coffeestore.coffeestore.controller;
 
 import com.coffeestore.coffeestore.entity.User;
-import com.coffeestore.coffeestore.service.MenuService;
 import com.coffeestore.coffeestore.service.OrderCartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

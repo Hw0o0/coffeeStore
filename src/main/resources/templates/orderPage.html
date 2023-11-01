@@ -1,50 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <title>주문 페이지</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
 <header>
-    <div>
-        <a href="/home">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/home">
             <img src="/images/logo.png" alt="">
         </a>
-    </div>
-    <ul>
-        <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
-        <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
-            <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
-        <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
-        <li><a th:if="${session.user != null}" href="/orderCart">나의 장바구니</a></li>
-        <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
-        <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
-        <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
-        <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
-        <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
-        <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
-    </ul>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${session.user != null}" href="/home/logout">로그아웃</a>
+                    <a class="nav-link" th:unless="${session.user != null}" href="/home/login">로그인</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${session.user != null}" href="/orderCart">나의 장바구니</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${session.user != null}" href="/user">회원 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${session.user != null}" href="/menu">메뉴 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${session.user != null}" href="/ingredient">재료 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${session.user != null}" href="/supplier">공급업체 관리</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${session.user != null}" href="/order">주문 관리</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 </header>
-<div>
-    <h3>주문 정보 입력</h3>
-</div>
-<form method="POST" th:action="@{/order/menuOrder}">
-    <label for="payMethod">지불 방식 :</label>
-    <input type="text" name="payMethod" id="payMethod" placeholder="지불 방식을 입력해주세요."/>
-    <input type="hidden" name="orderId" th:value="${order.getId()}"/>
-    <h4>총 가격: <span th:text="${order.getTotalPrice()}"></span>원</h4>
-    <input type="submit" value="주문하기"/>
-</form>
 
-<div th:each="cart: ${orderCartList}">
-    <div>
-        <label>메뉴명 : </label>
-        <h3 class="cart-name" th:text="${cart.getMenu().getName()}"></h3>
-        <label>가격 : </label>
-        <h4 class="cart-price" th:text="${cart.getMenu().getPrice()}"></h4>
-        <label>수량 : </label>
-        <h4 class="cart-amount" th:text="${cart.getAmount()}"></h4>
+<main class="container">
+    <h1 class="mt-5">주문 정보 입력</h1>
+    <form method="POST" th:action="@{/order/menuOrder}" class="mb-5">
+        <div class="form-group">
+            <label for="payMethod">지불 방식 :</label>
+            <input type="text" name="payMethod" id="payMethod" placeholder="지불 방식을 입력해주세요." class="form-control" />
+        </div>
+        <input type="hidden" name="orderId" th:value="${order.getId()}"/>
+        <h4>총 가격: <span th:text="${order.getTotalPrice()}"></span>원</h4>
+        <button type="submit" class="btn btn-primary">주문하기</button>
+    </form>
+
+    <h2>주문 목록</h2>
+    <div class="card mb-3" th:each="cart: ${orderCartList}">
+        <div class="card-body">
+            <h5 class="card-title" th:text="${cart.getMenu().getName()}"></h5>
+            <p class="card-text">
+                <strong>가격 : </strong> <span th:text="${cart.getMenu().getPrice()}"></span><br>
+                <strong>수량 : </strong> <span th:text="${cart.getAmount()}"></span>
+            </p>
+        </div>
     </div>
-</div>
+</main>
+
 </body>
+
 </html>

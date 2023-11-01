@@ -1,86 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>회원 관리</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
 <header>
-  <div>
-    <a href="/home">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">
       <img src="/images/logo.png" alt="">
     </a>
-  </div>
-  <ul>
-    <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
-    <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
-      <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
-    <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
-    <li><a th:if="${session.user != null}" href="/orderCart">나의 장바구니</a></li>
-    <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
-    <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
-  </ul>
-
-  <div>
-    <form method="GET" th:action="@{/user/userSearch}" id="userSearch">
-      <div>
-        <label>
-          <input type="text" name="userName" placeholder="찾으시는 회원명을 입력하세요">
-        </label>
-        <button type="submit">검색</button>
-      </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/home/logout">로그아웃</a>
+          <a class="nav-link" th:unless="${session.user != null}" href="/home/login">로그인</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/orderCart">나의 장바구니</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/user">회원 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/menu">메뉴 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/ingredient">재료 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/supplier">공급업체 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/order">주문 관리</a>
+        </li>
+      </ul>
+    </div>
+    <form method="GET" th:action="@{/user/userSearch}" id="userSearch" class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" name="userName" placeholder="찾으시는 회원명을 입력하세요">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
     </form>
-  </div>
+  </nav>
 </header>
 
-<nav>
-  <div>
-    <div>
-      <h3>회원 관리</h3>
-    </div>
-    <div>
-      <div th:each="user: ${users}">
-        <div class="user">
-          <div>
-            <label>이름 : </label>
-            <h3 class="user-name" th:text="${user.getName()}"></h3>
-            <label>주소 : </label>
-            <h4 class="user-address" th:text="${user.getAddress()}"></h4>
-            <label>전화번호 : </label>
-            <h4 class="user-phoneNumber" th:text="${user.getPhoneNumber()}"></h4>
-            <label>상태 : </label>
-            <h4 class="user-state" th:text="${user.getState() == 0 ? '비활성화':'활성화'}"></h4>
-          </div>
-
-          <form th:method="patch" th:action = "@{/user/update}" id="menuUpdate">
-            <input type ="hidden" name="userId" th:value="${user.getId()}"/>
-            <label for="updateName">이름 : </label>
-            <input type="text" name="updateName" id="updateName"/><br/>
-            <label for="updateAddress">주소 : </label>
-            <input type="text" name="updateAddress" id="updateAddress"/><br/>
-            <label for="updatePhoneNumber">전화번호 : </label>
-            <input type="text" name="updatePhoneNumber" id="updatePhoneNumber"/><br/>
-            <input type="submit" value="회원 정보 수정">
-          </form>
-
-          <form th:method="delete" th:action = "@{/user/delete}" id="userDelete">
-            <input type ="hidden" name="userId" th:value="${user.getId()}"/>
-            <input type="submit" value="회원 정보 삭제">
-          </form>
-
-          <form th:method="patch" th:action = "@{/user/state}" id="userState">
-            <input type ="hidden" name="userId" th:value="${user.getId()}"/>
-            <input type="submit" value="회원 상태 변경">
-          </form>
+<main class="container">
+  <h1 class="mt-5">회원 관리</h1>
+  <div class="card mb-3" th:each="user: ${users}">
+    <div class="card-body">
+      <h5 class="card-title" th:text="${user.getName()}"></h5>
+      <p class="card-text">
+        <strong>주소 : </strong> <span th:text="${user.getAddress()}"></span><br>
+        <strong>전화번호 : </strong> <span th:text="${user.getPhoneNumber()}"></span><br>
+        <strong>상태 : </strong> <span th:text="${user.getState() == 0 ? '비활성화':'활성화'}"></span>
+      </p>
+      <form th:method="patch" th:action = "@{/user/update}" id="menuUpdate" class="mb-2">
+        <div class="form-group">
+          <input type ="hidden" name="userId" th:value="${user.getId()}"/>
+          <label for="updateName">이름 : </label>
+          <input type="text" name="updateName" id="updateName" class="form-control"/>
         </div>
-      </div>
+        <div class="form-group">
+          <label for="updateAddress">주소 : </label>
+          <input type="text" name="updateAddress" id="updateAddress" class="form-control"/>
+        </div>
+        <div class="form-group">
+          <label for="updatePhoneNumber">전화번호 : </label>
+          <input type="text" name="updatePhoneNumber" id="updatePhoneNumber" class="form-control"/>
+        </div>
+        <button type="submit" class="btn btn-primary">회원 정보 수정</button>
+      </form>
+
+      <form th:method="delete" th:action = "@{/user/delete}" id="userDelete" class="mb-2">
+        <input type ="hidden" name="userId" th:value="${user.getId()}"/>
+        <button type="submit" class="btn btn-danger">회원 정보 삭제</button>
+      </form>
+
+      <form th:method="patch" th:action = "@{/user/state}" id="userState" class="mb-2">
+        <input type ="hidden" name="userId" th:value="${user.getId()}"/>
+        <button type="submit" class="btn btn-warning">회원 상태 변경</button>
+      </form>
     </div>
   </div>
-</nav>
+</main>
 
 </body>
+
 </html>

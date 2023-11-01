@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>메뉴 상세 정보</title>
+    <meta charset="utf-8">
+    <title>희망 공급목록 관리</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -50,32 +50,36 @@
 </header>
 
 <main class="container">
-    <h1 class="mt-5">메뉴 상세 정보</h1>
-    <div class="card mb-3">
+    <h1 class="mt-5">희망 공급목록 관리</h1>
+    <div class="card mb-3" th:each="supplyCart: ${supplyDetailsList}">
         <div class="card-body">
-            <h5 class="card-title" th:text="${menu.getName()}"></h5>
+            <h5 class="card-title" th:text="${supplyCart.getIngredient().getName()}"></h5>
             <p class="card-text">
-                <strong>가격 : </strong> <span th:text="${menu.getPrice()}"></span><br>
-                <strong>카테고리 : </strong> <span th:text="${menu.getCategorize()}"></span><br>
-                <strong>등록일 : </strong> <span th:text="${menu.getCreatedDate()}"></span>
+                <strong>단위 : </strong> <span th:text="${supplyCart.getIngredient().getUnit()}"></span>
             </p>
-            <form method="GET" th:action="@{/order/purchase}">
-                <input type="hidden" name="menuId" th:value="${menu.getId()}">
-                <button type="submit" class="btn btn-primary">구매하기</button>
+            <form th:method="patch" th:action = "@{/supplyDetails/updateSupplyAmount}" id="updateSupplyAmount" class="mb-2">
+                <div class="form-group">
+                    <input type ="hidden" name="supplyDetailId" th:value="${supplyCart.getId()}"/>
+                    <input type ="hidden" name="supplierId" th:value="${supplierId}"/>
+                    <label>공급량 : </label>
+                    <input type="number" name="updateAmount" th:value="${supplyCart.getSupplyAmount()}" class="form-control"/>
+                </div>
+                <button type="submit" class="btn btn-primary">공급량 수정</button>
+            </form>
+
+            <form th:method="delete" th:action = "@{/supplyDetails/deleteSupplyDetail}" id="deleteSupplyDetail" class="mb-2">
+                <input type ="hidden" name="supplyDetailId" th:value="${supplyCart.getId()}"/>
+                <input type ="hidden" name="supplierId" th:value="${supplierId}"/>
+                <button type="submit" class="btn btn-danger">공급 삭제</button>
             </form>
         </div>
     </div>
 
-    <h2>메뉴 레시피</h2>
-    <div class="card mb-3" th:each="usedRecipe: ${recipeList}">
-        <div class="card-body">
-            <p><strong>재료명 : </strong></p>
-            <h5 class="card-title" th:text="${usedRecipe.getIngredient().getName()}"></h5>
-            <p class="card-text">
-                <strong>사용량 : </strong> <span th:text="${usedRecipe.getAmount()}"></span>
-            </p>
-        </div>
-    </div>
+    <form method="GET" th:action="@{/supply}" class="mb-5">
+        <input type ="hidden" name="supplyId" th:value="${supplyDetailsList.get(0).getSupply().getId()}"/>
+        <button type="submit" class="btn btn-primary">최종 공급페이지로 이동하기</button>
+        <a th:href="@{/supplier}" type = "button" class="btn btn-secondary">돌아가기</a>
+    </form>
 </main>
 
 </body>

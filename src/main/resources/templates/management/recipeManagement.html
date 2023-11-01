@@ -1,84 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>레시피 관리</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-<header>
-  <div>
-    <a href="/home">
+<header class="mb-4">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">
       <img src="/images/logo.png" alt="">
     </a>
-  </div>
-  <ul>
-    <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
-    <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
-      <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
-    <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
-    <li><a th:if="${session.user != null}" href="/orderCart">나의 장바구니</a></li>
-    <li><a th:unless="${session.user != null}" href="/home/userRegistration">레시피 가입</a></li>
-    <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
-  </ul>
-
-    <form method="GET" th:action="@{/recipe/ingredientSearch}" id="ingredientSearch">
-        <label for="ingredientName">재료명 : </label>
-        <input type="text" name="ingredientName" id="ingredientName" placeholder="찾으시는 재료명을 입력하세요">
-        <label for="ingredientUnit">단위 : </label>
-        <input type="text" name="ingredientUnit" id="ingredientUnit" placeholder="필요하신 단위를 입력하세요">
-        <input type ="hidden" name="menuId" th:value="${menuId}"/>
-        <button type="submit">검색</button>
-    </form>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/home/logout">로그아웃</a>
+          <a class="nav-link" th:unless="${session.user != null}" href="/home/login">로그인</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/orderCart">나의 장바구니</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:unless="${session.user != null}" href="/home/userRegistration">레시피 가입</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/user">회원 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/menu">메뉴 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/ingredient">재료 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/supplier">공급업체 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/order">주문 관리</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 </header>
 
-<form method="GET" th:action="@{/recipe/addIngredient}">
-  <!-- 재료 정보 표시 -->
-  <h3 class="ingredient-name" th:text="${ingredient.getName()}" th:if="${ingredient != null}"></h3>
-  <h4 class="ingredient-unit" th:text="${ingredient.getUnit()}" th:if="${ingredient != null}"></h4>
-  <label for="amount"></label>
-  <input type="text" name="amount" id="amount" placeholder="레시피에 필요한 양만큼 입력하세요" th:if="${ingredient != null}">
-  <input type ="hidden" name="ingredientId" th:value="${ingredient.getId()}" th:if="${ingredient != null}"/>
-  <input type ="hidden" name="menuId" th:value="${menuId}" th:if="${ingredient != null}"/>
-  <input type="submit" value="레시피 재료 추가">
-  <a th:href="@{/recipe/backView}" type = "button">돌아가기</a>
-</form>
-
-<nav>
-  <div>
-    <div>
-      <h3>레시피 관리</h3>
+<main class="container">
+  <form method="GET" th:action="@{/recipe/ingredientSearch}" class="mb-4">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="ingredientName">재료명 : </label>
+        <input type="text" name="ingredientName" id="ingredientName" class="form-control" placeholder="찾으시는 재료명을 입력하세요">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="ingredientUnit">단위 : </label>
+        <input type="text" name="ingredientUnit" id="ingredientUnit" class="form-control" placeholder="필요하신 단위를 입력하세요">
+      </div>
     </div>
-    <div>
-      <div th:each="recipe: ${recipes}" th:if="${recipes.size() > 0}">
-        <div class="recipe">
-          <div>
-            <h3 class="recipe-name" th:text="${recipe.getIngredient().getName()}"></h3>
-            <h4 class="recipe-unit" th:text="${recipe.getIngredient().getUnit()}"></h4>
-            <h4 class="recipe-unit" th:text="${recipe.getAmount()}" th:if="${recipe.getAmount() != null}"></h4>
-          </div>
+    <input type="hidden" name="menuId" th:value="${menuId}">
+    <button type="submit" class="btn btn-primary">검색</button>
+  </form>
 
-          <form th:method="patch" th:action = "@{/recipe/update}" id="menuUpdate">
-            <input type ="hidden" name="recipeId" th:value="${recipe.getId()}"/>
-            <input type ="hidden" name="menuId" th:value="${menuId}"/>
+  <form method="GET" th:action="@{/recipe/addIngredient}" class="mb-4">
+    <!-- 재료 정보 표시 -->
+    <h3 class="ingredient-name" th:text="${ingredient.getName()}" th:if="${ingredient != null}"></h3>
+    <h4 class="ingredient-unit" th:text="${ingredient.getUnit()}" th:if="${ingredient != null}"></h4>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="amount">레시피에 필요한 양만큼 입력하세요</label>
+        <input type="text" name="amount" id="amount" class="form-control" th:if="${ingredient != null}">
+      </div>
+    </div>
+    <input type="hidden" name="ingredientId" th:value="${ingredient.getId()}" th:if="${ingredient != null}">
+    <input type="hidden" name="menuId" th:value="${menuId}" th:if="${ingredient != null}">
+    <button type="submit" class="btn btn-primary">레시피 재료 추가</button>
+    <a th:href="@{/recipe/backView}" class="btn btn-secondary">돌아가기</a>
+  </form>
+
+  <h3>레시피 관리</h3>
+  <div class="card-deck">
+    <div class="card" th:each="recipe: ${recipes}" th:if="${recipes.size() > 0}">
+      <div class="card-body">
+        <h5 class="card-title" th:text="${recipe.getIngredient().getName()}"></h5>
+        <h6 class="card-subtitle mb-2 text-muted" th:text="${recipe.getIngredient().getUnit()}"></h6>
+        <h6 class="card-subtitle mb-2 text-muted" th:text="${recipe.getAmount()}" th:if="${recipe.getAmount() != null}"></h6>
+        <form th:method="patch" th:action="@{/recipe/update}">
+          <input type="hidden" name="recipeId" th:value="${recipe.getId()}">
+          <input type="hidden" name="menuId" th:value="${menuId}">
+          <div class="form-group">
             <label for="updateAmount">수량 : </label>
-            <input type="text" name="updateAmount" id="updateAmount"/>
-            <input type="submit" value="레시피 정보 수정">
-          </form>
-
-          <form th:method="delete" th:action = "@{/recipe/delete}" id="recipeDelete">
-            <input type ="hidden" name="recipeId" th:value="${recipe.getId()}"/>
-            <input type ="hidden" name="menuId" th:value="${menuId}"/>
-            <input type="submit" value="레시피 정보 삭제">
-          </form>
-        </div>
+            <input type="text" name="updateAmount" id="updateAmount" class="form-control">
+          </div>
+          <button type="submit" class="btn btn-primary">레시피 정보 수정</button>
+        </form>
+        <form th:method="delete" th:action="@{/recipe/delete}">
+          <input type="hidden" name="recipeId" th:value="${recipe.getId()}">
+          <input type="hidden" name="menuId" th:value="${menuId}">
+          <button type="submit" class="btn btn-danger">레시피 정보 삭제</button>
+        </form>
       </div>
     </div>
   </div>
-</nav>
-
+</main>
 </body>
 </html>

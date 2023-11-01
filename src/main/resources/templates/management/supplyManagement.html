@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>메뉴 상세 정보</title>
+    <title>공급 관리</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -27,6 +27,9 @@
                     <a class="nav-link" th:if="${session.user != null}" href="/orderCart">나의 장바구니</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" th:if="${session.user != null}" href="/supplyDetails">재료 공급 신청</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a>
                 </li>
                 <li class="nav-item">
@@ -44,35 +47,26 @@
                 <li class="nav-item">
                     <a class="nav-link" th:if="${session.user != null}" href="/order">주문 관리</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:if="${session.user != null}" href="/supply">공급 관리</a>
+                </li>
             </ul>
         </div>
+        <form method="GET" th:action="@{/supply/supplierNameSearch}" id="supplierNameSearch" class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="text" name="supplierName" placeholder="찾으시는 공급업체명을 입력하세요">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
+        </form>
     </nav>
 </header>
 
 <main class="container">
-    <h1 class="mt-5">메뉴 상세 정보</h1>
-    <div class="card mb-3">
+    <h1 class="mt-5">공급 관리</h1>
+    <div class="card mb-3" th:each="supply: ${supplyList}">
         <div class="card-body">
-            <h5 class="card-title" th:text="${menu.getName()}"></h5>
+            <h5 class="card-title" th:text="${supply.getSupplier().getName()}"></h5>
             <p class="card-text">
-                <strong>가격 : </strong> <span th:text="${menu.getPrice()}"></span><br>
-                <strong>카테고리 : </strong> <span th:text="${menu.getCategorize()}"></span><br>
-                <strong>등록일 : </strong> <span th:text="${menu.getCreatedDate()}"></span>
-            </p>
-            <form method="GET" th:action="@{/order/purchase}">
-                <input type="hidden" name="menuId" th:value="${menu.getId()}">
-                <button type="submit" class="btn btn-primary">구매하기</button>
-            </form>
-        </div>
-    </div>
-
-    <h2>메뉴 레시피</h2>
-    <div class="card mb-3" th:each="usedRecipe: ${recipeList}">
-        <div class="card-body">
-            <p><strong>재료명 : </strong></p>
-            <h5 class="card-title" th:text="${usedRecipe.getIngredient().getName()}"></h5>
-            <p class="card-text">
-                <strong>사용량 : </strong> <span th:text="${usedRecipe.getAmount()}"></span>
+                <strong>총 가격 : </strong> <span th:text="${supply.getTotalPrice()}"></span><br>
+                <strong>납기일 : </strong> <span th:text="${supply.getDueDate()}"></span>
             </p>
         </div>
     </div>

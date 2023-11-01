@@ -1,68 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>장바구니 관리</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-<header>
-  <div>
-    <a href="/home">
+<header class="mb-4">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">
       <img src="/images/logo.png" alt="">
     </a>
-  </div>
-  <ul>
-    <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
-    <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
-      <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
-    <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
-    <li><a th:if="${session.user != null}" href="/orderCart">나의 장바구니</a></li>
-    <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
-    <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
-  </ul>
-</header>
-
-<nav>
-  <div>
-    <div>
-      <h3>장바구니 관리</h3>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/home/logout">로그아웃</a>
+          <a class="nav-link" th:unless="${session.user != null}" href="/home/login">로그인</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/orderCart">나의 장바구니</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/user">회원 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/menu">메뉴 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/ingredient">재료 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/supplier">공급업체 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/order">주문 관리</a>
+        </li>
+      </ul>
     </div>
-    <div th:each="cart: ${orderCarts}">
-      <div class="cart">
-        <div>
-          <label>메뉴명 : </label>
-          <h3 class="cart-name" th:text="${cart.getMenu().getName()}"></h3>
-          <label>가격 : </label>
-          <h4 class="cart-price" th:text="${cart.getMenu().getPrice()}"></h4>
-          <label>카테고리 : </label>
-          <h4 class="cart-categorize" th:text="${cart.getMenu().getCategorize()}"></h4>
-          <label>수량 : </label>
-          <h4 class="cart-amount" th:text="${cart.getAmount()}"></h4>
+  </nav>
+</header>
+<div class="container">
+  <nav>
+    <div>
+      <div>
+        <h3 class="mb-4">장바구니 관리</h3>
+      </div>
+      <div th:each="cart: ${orderCarts}">
+        <div class="card mb-3">
+          <div class="card-body">
+            <label>메뉴명 : </label>
+            <h3 class="cart-name card-title" th:text="${cart.getMenu().getName()}"></h3>
+            <label>가격 : </label>
+            <h4 class="cart-price card-subtitle" th:text="${cart.getMenu().getPrice()}"></h4>
+            <label>카테고리 : </label>
+            <h4 class="cart-categorize card-subtitle" th:text="${cart.getMenu().getCategorize()}"></h4>
+            <label>수량 : </label>
+            <h4 class="cart-amount card-subtitle" th:text="${cart.getAmount()}"></h4>
 
-          <form th:method="patch" th:action = "@{/orderCart/update}" id="cartUpdate">
-            <input type ="hidden" name="cartId" th:value="${cart.getId()}"/>
-            <label for="updateAmount">구매 수량 : </label>
-            <input type="number" name="updateAmount" id="updateAmount"/><br/>
-            <input type="submit" value="장바구니 수량 수정">
-          </form>
+            <form th:method="patch" th:action="@{/orderCart/update}" id="cartUpdate" class="mb-2">
+              <input type="hidden" name="cartId" th:value="${cart.getId()}" />
+              <label for="updateAmount">구매 수량 : </label>
+              <input type="number" name="updateAmount" id="updateAmount" class="form-control" /><br />
+              <input type="submit" value="장바구니 수량 수정" class="btn btn-primary" />
+            </form>
 
-          <form th:method="delete" th:action = "@{/orderCart/delete}" id="cartDelete">
-            <input type ="hidden" name="cartId" th:value="${cart.getId()}"/>
-            <input type="submit" value="장바구니 삭제">
-          </form>
+            <form th:method="delete" th:action="@{/orderCart/delete}" id="cartDelete">
+              <input type="hidden" name="cartId" th:value="${cart.getId()}" />
+              <input type="submit" value="장바구니 삭제" class="btn btn-danger" />
+            </form>
+          </div>
         </div>
       </div>
+      <form method="GET" th:action="@{/order/orderPage}">
+        <input type="submit" value="주문 하기" class="btn btn-success">
+        <a th:href="@{/home}" type="button" class="btn btn-secondary">돌아가기</a>
+      </form>
     </div>
-    <form method="GET" th:action="@{/order/orderPage}">
-      <input type="submit" value="주문 하기">
-      <a th:href="@{/home}" type = "button">돌아가기</a>
-    </form>
-  </div>
-</nav>
-
+  </nav>
+</div>
 </body>
 </html>

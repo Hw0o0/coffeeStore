@@ -1,91 +1,107 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>공급업체 관리</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-<header>
-  <div>
-    <a href="/home">
+<header class="mb-4">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">
       <img src="/images/logo.png" alt="">
     </a>
-  </div>
-  <ul>
-    <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
-    <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
-      <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
-    <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
-    <li><a th:if="${session.user != null}" href="/orderCart">나의 장바구니</a></li>
-    <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
-    <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
-  </ul>
-
-  <form method="POST" th:action="@{/supplier/registration}">
-    <label for="name">이름 : </label>
-    <input type="text" name="name" id="name"/><br/>
-    <label for="address">주소 : </label>
-    <input type="text" name="address" id="address"/><br/>
-    <input type="submit" value="등록하기"/>
-    <a th:href="@{/supplier}" type = "button">돌아가기</a>
-  </form>
-
-  <div>
-    <form method="GET" th:action="@{/supplier/supplierSearch}" id="supplierSearch">
-      <div>
-        <label>
-          <input type="text" name="supplierName" placeholder="찾으시는 공급업체명을 입력하세요">
-        </label>
-        <button type="submit">검색</button>
-      </div>
-    </form>
-  </div>
-</header>
-
-<nav>
-  <div>
-    <div>
-      <h3>공급업체 관리</h3>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/home/logout">로그아웃</a>
+          <a class="nav-link" th:unless="${session.user != null}" href="/home/login">로그인</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/orderCart">나의 장바구니</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/user">회원 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/menu">메뉴 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/ingredient">재료 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/supplier">공급업체 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/order">주문 관리</a>
+        </li>
+      </ul>
     </div>
+  </nav>
+</header>
+<div class="container">
+  <nav>
     <div>
-      <div th:each="supplier: ${suppliers}">
-        <div class="supplier">
-          <div>
-            <label>이름 : </label>
-            <h3 class="supplier-name" th:text="${supplier.getName()}"></h3>
-            <label>주소 : </label>
-            <h4 class="supplier-address" th:text="${supplier.getAddress()}"></h4>
-            <label>상태 : </label>
-            <h4 class="supplier-state" th:text="${supplier.getState() == 0 ? '비활성화':'활성화'}"></h4>
+      <div>
+        <h3 class="mb-4">공급업체 관리</h3>
+      </div>
+      <form th:method="patch" th:action="@{/supplier/registration}" id="supplierCreate" class="mb-2">
+        <label>이름 : </label>
+        <input type="text" name="name" class="form-control" /><br />
+        <label>주소 : </label>
+        <input type="text" name="address"  class="form-control" /><br />
+        <input type="submit" value="공급업체 생성" class="btn btn-secondary" />
+      </form>
+      <div>
+        <div th:each="supplier: ${suppliers}">
+          <div class="card mb-3">
+            <div class="card-body">
+              <label>이름 : </label>
+              <h3 class="supplier-name card-title" th:text="${supplier.getName()}"></h3>
+              <label>주소 : </label>
+              <h4 class="supplier-address card-subtitle" th:text="${supplier.getAddress()}"></h4>
+              <label>상태 : </label>
+              <h4 class="supplier-state card-subtitle" th:text="${supplier.getState() == 0 ? '비활성화':'활성화'}"></h4>
+
+              <form th:method="GET" th:action="@{/supplyDetails}" id="ingredientSupply" class="mb-2">
+                <input type="hidden" name="supplierId" th:value="${supplier.getId()}" />
+                <input type="submit" value="공급 신청하기" class="btn btn-primary" />
+              </form>
+
+              <form th:method="patch" th:action="@{/supplier/update}" id="supplierUpdate" class="mb-2">
+                <input type="hidden" name="supplierId" th:value="${supplier.getId()}" />
+                <label for="updateName">이름 : </label>
+                <input type="text" name="updateName" id="updateName" class="form-control" /><br />
+                <label for="updateAddress">주소 : </label>
+                <input type="text" name="updateAddress" id="updateAddress" class="form-control" /><br />
+                <input type="submit" value="공급업체 정보 수정" class="btn btn-secondary" />
+              </form>
+
+              <form th:method="delete" th:action="@{/supplier/delete}" id="supplierDelete" class="mb-2">
+                <input type="hidden" name="supplierId" th:value="${supplier.getId()}" />
+                <input type="submit" value="공급업체 정보 삭제" class="btn btn-danger" />
+              </form>
+
+              <form th:method="patch" th:action="@{/supplier/state}" id="supplierState">
+                <input type="hidden" name="supplierId" th:value="${supplier.getId()}" />
+                <input type="submit" value="공급업체 상태 변경" class="btn btn-warning" />
+              </form>
+            </div>
           </div>
-
-          <form th:method="patch" th:action = "@{/supplier/update}" id="supplierUpdate">
-            <input type ="hidden" name="supplierId" th:value="${supplier.getId()}"/>
-            <label for="updateName">이름 : </label>
-            <input type="text" name="updateName" id="updateName"/><br/>
-            <label for="updateAddress">주소 : </label>
-            <input type="text" name="updateAddress" id="updateAddress"/><br/>
-            <input type="submit" value="공급업체 정보 수정">
-          </form>
-
-          <form th:method="delete" th:action = "@{/supplier/delete}" id="supplierDelete">
-            <input type ="hidden" name="supplierId" th:value="${supplier.getId()}"/>
-            <input type="submit" value="공급업체 정보 삭제">
-          </form>
-
-          <form th:method="patch" th:action = "@{/supplier/state}" id="supplierState">
-            <input type ="hidden" name="supplierId" th:value="${supplier.getId()}"/>
-            <input type="submit" value="공급업체 상태 변경">
-          </form>
         </div>
       </div>
     </div>
-  </div>
-</nav>
-
+  </nav>
+</div>
 </body>
+
 </html>

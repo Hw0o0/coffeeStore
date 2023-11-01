@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>메뉴 상세 정보</title>
+    <meta charset="utf-8">
+    <title>최종 공급 내역</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -14,7 +14,8 @@
         <a class="navbar-brand" href="/home">
             <img src="/images/logo.png" alt="">
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -50,34 +51,22 @@
 </header>
 
 <main class="container">
-    <h1 class="mt-5">메뉴 상세 정보</h1>
-    <div class="card mb-3">
+    <h1 class="mt-5">최종 공급 내역</h1>
+    <div class="card mb-3" th:each="supplyDetail: ${supplyDetailsList}">
         <div class="card-body">
-            <h5 class="card-title" th:text="${menu.getName()}"></h5>
+            <h5 class="card-title" th:text="${supplyDetail.getIngredient().getName()}"></h5>
             <p class="card-text">
-                <strong>가격 : </strong> <span th:text="${menu.getPrice()}"></span><br>
-                <strong>카테고리 : </strong> <span th:text="${menu.getCategorize()}"></span><br>
-                <strong>등록일 : </strong> <span th:text="${menu.getCreatedDate()}"></span>
+                <strong>공급량 : </strong> <span th:text="${supplyDetail.getSupplyAmount()}"></span><br>
+                <strong>단가 : </strong> <span th:text="${supplyDetail.getPrice()}"></span>
             </p>
-            <form method="GET" th:action="@{/order/purchase}">
-                <input type="hidden" name="menuId" th:value="${menu.getId()}">
-                <button type="submit" class="btn btn-primary">구매하기</button>
-            </form>
         </div>
     </div>
 
-    <h2>메뉴 레시피</h2>
-    <div class="card mb-3" th:each="usedRecipe: ${recipeList}">
-        <div class="card-body">
-            <p><strong>재료명 : </strong></p>
-            <h5 class="card-title" th:text="${usedRecipe.getIngredient().getName()}"></h5>
-            <p class="card-text">
-                <strong>사용량 : </strong> <span th:text="${usedRecipe.getAmount()}"></span>
-            </p>
-        </div>
-    </div>
+    <form method="GET" th:action="@{/supply/ingredientSupply}" class="mb-5">
+        <input type="hidden" name="supplyId" th:value="${supply.getId()}"/>
+        <h4>총 가격: <span th:text="${supply.getTotalPrice()}"></span>원</h4>
+        <button type="submit" class="btn btn-primary">공급 신청하기</button>
+    </form>
 </main>
-
 </body>
-
 </html>

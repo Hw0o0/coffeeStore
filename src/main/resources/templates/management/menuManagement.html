@@ -1,106 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
   <title>메뉴 관리</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
-<header>
-  <div>
-    <a href="/home">
+<header class="mb-4">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/home">
       <img src="/images/logo.png" alt="">
     </a>
-  </div>
-  <ul>
-    <li th:if="${session.user != null}"><span th:text="${session.user.getName()}"></span>님 안녕하세요.</li>
-    <li><a th:if="${session.user != null}" href="/home/logout">로그아웃</a>
-      <a th:unless="${session.user != null}" href="/home/login">로그인</a></li>
-    <li><a th:if="${session.user != null}" href="/user/userMyPage">마이페이지</a></li>
-    <li><a th:if="${session.user != null}" href="/orderCart">나의 장바구니</a></li>
-    <li><a th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a></li>
-    <li><a th:if="${session.user != null}" href="/user">회원 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/menu">메뉴 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/ingredient">재료 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/supplier">공급업체 관리</a></li>
-    <li><a th:if="${session.user != null}" href="/order">주문 관리</a></li>
-  </ul>
-  <div>
-    <form method="POST" th:action="@{/menu/registration}">
-      <label for="name">메뉴명 : </label>
-      <input type="text" name="name" id="name"/><br/>
-
-      <label for="price">가격 : </label>
-      <input type="text" name="price" id="price"/><br/>
-
-      <label for="categorize">카테고리 : </label>
-      <input type="text" name="categorize" id="categorize"/><br/>
-
-      <input type="submit" value="등록하기"/>
-      <a th:href="@{/menu}" type = "button">돌아가기</a>
-    </form>
-  </div>
-  <div>
-    <form method="GET" th:action="@{/menu/menuSearch}" id="menuSearch">
-      <div>
-        <label>
-          <input type="text" name="menuName" placeholder="찾으시는 메뉴명을 입력하세요">
-        </label>
-        <button type="submit">검색</button>
-      </div>
-    </form>
-  </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/home/logout">로그아웃</a>
+          <a class="nav-link" th:unless="${session.user != null}" href="/home/login">로그인</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/orderCart">나의 장바구니</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/user">회원 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/menu">메뉴 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/ingredient">재료 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/supplier">공급업체 관리</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" th:if="${session.user != null}" href="/order">주문 관리</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
 </header>
 
-<nav>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="mb-4">메뉴 등록</h3>
+      <form method="POST" th:action="@{/menu/registration}" class="mb-4">
+        <div class="form-group">
+          <label for="name">메뉴명</label>
+          <input type="text" name="name" id="name" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="price">가격</label>
+          <input type="text" name="price" id="price" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="categorize">카테고리</label>
+          <input type="text" name="categorize" id="categorize" class="form-control" />
+        </div>
+        <input type="submit" value="등록하기" class="btn btn-primary" />
+        <a th:href="@{/menu}" type="button" class="btn btn-secondary">돌아가기</a>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <h3 class="mb-4">메뉴 검색</h3>
+      <form method="GET" th:action="@{/menu/menuSearch}" id="menuSearch" class="mb-4">
+        <div class="form-group">
+          <input type="text" name="menuName" placeholder="찾으시는 메뉴명을 입력하세요" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">검색</button>
+      </form>
+    </div>
+  </div>
+
+  <h3 class="mb-4">메뉴 관리</h3>
+  <div th:each="menu: ${menus}" class="card mb-3">
+    <div class="card-body">
       <div>
-        <div>
-            <h3>메뉴 관리</h3>
-        </div>
-        <div>
-            <div th:each="menu: ${menus}">
-              <div class="menu">
-                <div>
-                  <label>이름 : </label>
-                  <h3 class="menu-name" th:text="${menu.getName()}"></h3>
-                  <label>가격 : </label>
-                  <h4 class="menu-price" th:text="${menu.getPrice()}"></h4>
-                  <label>카테고리 : </label>
-                  <h4 class="menu-categorize" th:text="${menu.getCategorize()}"></h4>
-                  <label>상태 : </label>
-                  <h4 class="menu-state" th:text="${menu.getState() == 0 ? '비활성화':'활성화'}"></h4>
-                </div>
-
-                <h4>메뉴 수정</h4>
-                <form th:method="patch" th:action = "@{/menu/update}" id="menuUpdate">
-                  <input type ="hidden" name="menuId" th:value="${menu.getId()}"/>
-                  <label for="updateName">이름 : </label>
-                  <input type="text" name="updateName" id="updateName"/><br/>
-                  <label for="updatePrice">가격 : </label>
-                  <input type="text" name="updatePrice" id="updatePrice"/><br/>
-                  <label for="updateCategorize">카테고리 : </label>
-                  <input type="text" name="updateCategorize" id="updateCategorize"/><br/>
-                  <input type="submit" value="메뉴 정보 수정">
-                </form>
-
-                <form method="GET" th:action = "@{/recipe}" id="recipe">
-                  <input type ="hidden" name="menuId" th:value="${menu.getId()}"/>
-                  <input type="submit" value="레시피 관리">
-                </form>
-
-                <form th:method="delete" th:action = "@{/menu/delete}" id="menuDelete">
-                  <input type ="hidden" name="menuId" th:value="${menu.getId()}"/>
-                  <input type="submit" value="메뉴 정보 삭제">
-                </form>
-
-                <form th:method="patch" th:action = "@{/menu/state}" id="menuState">
-                  <input type ="hidden" name="menuId" th:value="${menu.getId()}"/>
-                  <input type="submit" value="메뉴 상태 변경">
-                </form>
-              </div>
-            </div>
-        </div>
+        <label>이름 : </label>
+        <h3 class="menu-name card-title" th:text="${menu.getName()}"></h3>
+        <label>가격 : </label>
+        <h4 class="menu-price card-subtitle" th:text="${menu.getPrice()}"></h4>
+        <label>카테고리 : </label>
+        <h4 class="menu-categorize card-subtitle" th:text="${menu.getCategorize()}"></h4>
+        <label>상태 : </label>
+        <h4 class="menu-state card-subtitle" th:text="${menu.getState() == 0 ? '비활성화':'활성화'}"></h4>
       </div>
-</nav>
 
+      <h4 class="mt-4">메뉴 수정</h4>
+      <form th:method="patch" th:action="@{/menu/update}" id="menuUpdate" class="mb-2">
+        <input type="hidden" name="menuId" th:value="${menu.getId()}" />
+        <div class="form-group">
+          <label for="updateName">이름</label>
+          <input type="text" name="updateName" id="updateName" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="updatePrice">가격</label>
+          <input type="text" name="updatePrice" id="updatePrice" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label for="updateCategorize">카테고리</label>
+          <input type="text" name="updateCategorize" id="updateCategorize" class="form-control" />
+        </div>
+        <input type="submit" value="메뉴 정보 수정" class="btn btn-primary" />
+      </form>
+
+      <form method="GET" th:action="@{/recipe}" id="recipe" class="mb-2">
+        <input type="hidden" name="menuId" th:value="${menu.getId()}" />
+        <input type="submit" value="레시피 관리" class="btn btn-secondary" />
+      </form>
+
+      <form th:method="delete" th:action="@{/menu/delete}" id="menuDelete" class="mb-2">
+        <input type="hidden" name="menuId" th:value="${menu.getId()}" />
+        <input type="submit" value="메뉴 정보 삭제" class="btn btn-danger" />
+      </form>
+
+      <form th:method="patch" th:action="@{/menu/state}" id="menuState" class="mb-2">
+        <input type="hidden" name="menuId" th:value="${menu.getId()}" />
+        <input type="submit" value="메뉴 상태 변경" class="btn btn-warning" />
+      </form>
+    </div>
+  </div>
+</div>
 </body>
 </html>

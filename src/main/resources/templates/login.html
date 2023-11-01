@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>메인 페이지</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
 <div class="container">
-  <a href="/home">
-  <img src="/images/logo.png" alt="">
-</a>
-
+  <div class="text-center my-5">
+    <a href="/home">
+      <img src="/images/logo.png" alt="">
+    </a>
+  </div>
   <form method="POST" th:action="@{/user/login}">
-    <label for="name">이름 : </label>
-    <input type="text" name="name" id="name"/><br/>
+    <div class="form-group">
+      <label for="name">이름 : </label>
+      <input type="text" name="name" id="name" class="form-control" />
+    </div>
 
-    <label for="phoneNumber">전화번호 : </label>
-    <input type="text" name="phoneNumber" id="phoneNumber"/><br/>
+    <div class="form-group">
+      <label for="phoneNumber">전화번호 : </label>
+      <input type="text" name="phoneNumber" id="phoneNumber" class="form-control" />
+    </div>
 
-    <input type="submit" value="로그인"/>
-    <a th:href="@{/home}" type = "button">돌아가기</a>
+    <button type="submit" class="btn btn-primary">로그인</button>
+    <a th:href="@{/home}" type="button" class="btn btn-secondary">돌아가기</a>
   </form>
-
 </div>
 </body>
+
 </html>

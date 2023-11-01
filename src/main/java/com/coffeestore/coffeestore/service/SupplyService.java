@@ -1,8 +1,6 @@
 package com.coffeestore.coffeestore.service;
 
 import com.coffeestore.coffeestore.entity.*;
-import com.coffeestore.coffeestore.repository.IngredientRepository;
-import com.coffeestore.coffeestore.repository.SupplierRepository;
 import com.coffeestore.coffeestore.repository.SupplyDetailsRepository;
 import com.coffeestore.coffeestore.repository.SupplyRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,16 +17,12 @@ public class SupplyService {
 
     private final SupplyRepository supplyRepository;
 
-    private final IngredientRepository ingredientRepository;
 
     private final SupplyDetailsRepository supplyDetailsRepository;
 
     //공급업체별 모든 공급 내역
-    public List<Supply> findByAll(Long id){
-        return supplyRepository.findAll()
-                .stream()
-                .filter(Supply -> Supply.getId().equals(id))
-                .collect(Collectors.toList());
+    public List<Supply> findByAll(){
+        return supplyRepository.findAll();
     }
     public Supply findBySupply(Long id){
         Optional<Supply> supply = supplyRepository.findById(id);
@@ -66,5 +60,23 @@ public class SupplyService {
         Supply supply = findBySupply(id);
         supply.setState(0);
         supplyRepository.save(supply);
+    }
+
+    public void save(Supply supply) {
+        supplyRepository.save(supply);
+    }
+
+    public void supplyOk(Supply supply, List<SupplyDetails> supplyDetailsList) {
+        for(SupplyDetails supplyDetails : supplyDetailsList){
+            supplyDetails.setState(0);
+            supplyDetailsRepository.save(supplyDetails);
+        }
+        supply.setState(0);
+        supply.setDueDate(new Date());
+        supplyRepository.save(supply);
+    }
+
+    public Supply findByName(String supplierName) {
+        return supplyRepository.findBySupplierName(supplierName);
     }
 }

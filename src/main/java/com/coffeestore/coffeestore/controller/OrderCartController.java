@@ -1,5 +1,6 @@
 package com.coffeestore.coffeestore.controller;
 
+import com.coffeestore.coffeestore.entity.OrderCart;
 import com.coffeestore.coffeestore.entity.User;
 import com.coffeestore.coffeestore.service.OrderCartService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -19,24 +21,28 @@ public class OrderCartController {
     private final OrderCartService orderCartService;
 
     @GetMapping
-    public String orderCarts(Model model, HttpServletRequest request){
+    public String orderCarts(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
-        model.addAttribute("orderCarts", orderCartService.findByUser(user));
+        List<OrderCart> orderCartList = orderCartService.findByUser(user);
+        model.addAttribute("orderCarts", orderCartList);
         return "/management/orderCartManagement";
     }
+
     @PostMapping("/registration")
-    public String cartRegistration(@RequestParam("menuId")Long menuId,HttpServletRequest request){
-        orderCartService.createByOrderCart(request,menuId);
+    public String cartRegistration(@RequestParam("menuId") Long menuId, HttpServletRequest request) {
+        orderCartService.createByOrderCart(request, menuId);
         return "redirect:/home";
     }
+
     @PatchMapping("/update")
-    public String changeByCartAmount(@RequestParam("cartId")Long cartId,Integer updateAmount){
-        orderCartService.updateByOrderCartAmount(cartId,updateAmount);
+    public String changeByCartAmount(@RequestParam("cartId") Long cartId, Integer updateAmount) {
+        orderCartService.updateByOrderCartAmount(cartId, updateAmount);
         return "redirect:/orderCart";
     }
+
     @DeleteMapping("delete")
-    public String deleteByCart(@RequestParam("cartId")Long cartId){
+    public String deleteByCart(@RequestParam("cartId") Long cartId) {
         orderCartService.deleteByOrderCart(cartId);
         return "redirect:/orderCart";
     }

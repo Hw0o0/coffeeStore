@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/supply")
@@ -21,32 +19,28 @@ import java.util.stream.Collectors;
 public class SupplyController {
     private final SupplyService supplyService;
     private final SupplyDetailsService supplyDetailsService;
-    @GetMapping
-    public String supplyPage(Model model,@RequestParam("supplyId")Long supplyId){
-        List<SupplyDetails> supplyDetailsList = supplyDetailsService.findByAll()
-                .stream()
-                .filter(supplyDetails -> supplyDetails.getSupply().getId().equals(supplyId))
-                .collect(Collectors.toList());
-        int totalPrice = supplyDetailsList.stream()
-                .mapToInt(supplyDetails -> supplyDetails.getPrice()*supplyDetails.getSupplyAmount())
-                .sum();
 
-        Supply supply = supplyService.setTotalPrice(supplyId,totalPrice);
+    @GetMapping
+    public String supplyPage(Model model, @RequestParam("supplyId") Long supplyId) {
+        List<SupplyDetails> supplyDetailsList = supplyService.findBySupplyDetailsList(supplyId);
+        int totalPrice = supplyService.createByTotalPrice(supplyDetailsList);
+        Supply supply = supplyService.setTotalPrice(supplyId, totalPrice);
         model.addAttribute(supply).addAttribute(supplyDetailsList);
         return "supplyPage";
     }
+
     @GetMapping("/supplierNameSearch")
-    public String supplierNameSearchView(Model model,@RequestParam("supplierName")String supplierName){
-            List<Supply> supply = new ArrayList<>();
-            supply.add(supplyService.findByName(supplierName));
-            model.addAttribute("supplyList",supply);
-            return "/management/supplyManagement";
-        }
+    public String supplierNameSearchView(Model model, @RequestParam("supplierName") String supplierName) {
+        List<Supply> supply = supplyService.searchBySupplierName(supplierName);
+        model.addAttribute("supplyList", supply);
+        return "/management/supplyManagement";
+    }
+
     @GetMapping("/ingredientSupply")
-    public String supplyOkView(Model model,@RequestParam("supplyId")Long supplyId){
+    public String supplyOkView(Model model, @RequestParam("supplyId") Long supplyId) {
         Supply supply = supplyService.findBySupply(supplyId);
         List<SupplyDetails> supplyDetailsList = supplyDetailsService.findBySupplyDetailAll(supply.getSupplier().getId());
-        supplyService.supplyOk(supply,supplyDetailsList);
+        supplyService.supplyOk(supply, supplyDetailsList);
         List<Supply> supplyList = supplyService.findByAll();
         model.addAttribute(supplyList);
         return "/management/supplyManagement";

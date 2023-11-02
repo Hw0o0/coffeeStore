@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
 import java.util.stream.Collectors;
 
 @Service
@@ -19,28 +17,30 @@ import java.util.stream.Collectors;
 public class RecipeService {
     private final RecipeRepository recipeRepository;
 
-    public List<Recipe> findByMenuUseAll(Long menuId){    //요리에 사용되는 재료들
+    public List<Recipe> findByMenuUseAll(Long menuId) {    //요리에 사용되는 재료들
         return recipeRepository.findAll()
                 .stream()
                 .filter(Recipe -> Recipe.getMenu().getId().equals(menuId))
                 .collect(Collectors.toList());
 
     }
-    public Recipe findByRecipe(Long id){
-        Optional<Recipe> recipe = recipeRepository.findById(id);
-        return recipe.orElse(null);
+
+    public Recipe findByRecipe(Long id) {
+        return recipeRepository.findById(id).orElseThrow();
     }
-    public void createByRecipe(Menu menu,Ingredient ingredient,Integer amount){
-        Recipe recipe = RecipeRegistrationRequestDto.toEntity(menu,ingredient,amount);
+
+    public void createByRecipe(Menu menu, Ingredient ingredient, Integer amount) {
+        Recipe recipe = RecipeRegistrationRequestDto.toEntity(menu, ingredient, amount);
         recipeRepository.save(recipe);
     }
-    public void updateByRecipe(Long recipeId, RecipeUpdateRequestDto recipeUpdateRequestDto){
+
+    public void updateByRecipe(Long recipeId, RecipeUpdateRequestDto recipeUpdateRequestDto) {
         Recipe recipe = findByRecipe(recipeId);
         recipe.update(recipeUpdateRequestDto);
         recipeRepository.save(recipe);
     }
 
-    public void deleteByRecipe(Long id){
+    public void deleteByRecipe(Long id) {
         Recipe recipe = findByRecipe(id);
         recipeRepository.delete(recipe);
     }

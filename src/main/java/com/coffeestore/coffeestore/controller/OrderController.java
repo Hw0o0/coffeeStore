@@ -30,20 +30,22 @@ public class OrderController {
     private final OrderCartService orderCartService;
 
     @GetMapping
-    public String findByAllOrder(Model model,HttpServletRequest request){
+    public String findByAllOrder(Model model, HttpServletRequest request) {
         List<Order> orderList = orderService.findAll(request);
         model.addAttribute(orderList);
         return "management/orderManagement";
     }
+
     @GetMapping("/orderUserSearch")
-    public String orderUserSearch(Model model,@RequestParam("userName")String userName){
+    public String orderUserSearch(Model model, @RequestParam("userName") String userName) {
         List<Order> orderList = orderService.findByOrderUsers(userName);
-        model.addAttribute("orderList",orderList);
+        model.addAttribute("orderList", orderList);
         return "/management/orderManagement";
     }
+
     //장박구니 여러개 주문버튼 누를시
     @GetMapping("/orderPage")
-    public String orderView(Model model, HttpServletRequest request){
+    public String orderView(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
         Order order = orderService.findByOrderCart(user);
@@ -51,19 +53,21 @@ public class OrderController {
         model.addAttribute(order).addAttribute(orderCartList);
         return "orderPage";
     }
-    @PostMapping("/menuOrder")
-    public String orderOk(String payMethod,Long orderId){
-        orderService.orderOk(payMethod,orderId);
-        return "redirect:/home";
-    }
+
     //바로 구매버튼 누를시
     @GetMapping("/purchase")
-    public String purchaseMenu(Model model,@RequestParam("menuId")Long menuId,HttpServletRequest request){
-        OrderCart orderCart =orderCartService.createByOrderCart(request,menuId);
-        Order order = orderService.findByOrderAndSetPrice(orderCart.getOrder().getId(),orderCart);
+    public String purchaseMenu(Model model, @RequestParam("menuId") Long menuId, HttpServletRequest request) {
+        OrderCart orderCart = orderCartService.createByOrderCart(request, menuId);
+        Order order = orderService.findByOrderAndSetPrice(orderCart.getOrder().getId(), orderCart);
         List<OrderCart> orderCartList = new ArrayList<>();
         orderCartList.add(orderCart);
         model.addAttribute(order).addAttribute(orderCartList);
         return "orderPage";
+    }
+
+    @PostMapping("/menuOrder")
+    public String orderOk(@RequestParam("orderId") Long orderId, String payMethod) {
+        orderService.orderOk(payMethod, orderId);
+        return "redirect:/home";
     }
 }

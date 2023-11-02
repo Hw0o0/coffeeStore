@@ -11,9 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Controller
@@ -23,49 +21,52 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping
-    public String userManagement(Model model){
+    public String userManagement(Model model) {
         model.addAttribute("users", userService.findByAll());
         return "/management/userManagement";
     }
+
     @GetMapping("/userSearch")
-    public String userSearch(Model model,@RequestParam("userName")String userName){
-        List<User> users = new ArrayList<>();
-        users.add(userService.findByName(userName));
-        model.addAttribute("users",users);
+    public String userSearch(Model model, @RequestParam("userName") String userName) {
+        List<User> users = userService.searchByUser(userName);
+        model.addAttribute("users", users);
         return "/management/userManagement";
     }
 
     @PostMapping("/login")
     public String login(LoginReqDto loginReqDto, HttpSession session) {
         boolean checked = userService.login(loginReqDto);
-        Optional<User> user = userService.findByNameAndPhoneNumber(loginReqDto);
+        User user = userService.findByNameAndPhoneNumber(loginReqDto);
         if (checked) {
             //session 유효 시간 60분 설정
-            session.setAttribute("user",user.get());
+            session.setAttribute("user", user);
             session.setMaxInactiveInterval(3600);
             return "redirect:/home";
         } else {
             return "redirect:/login";
         }
     }
+
     @PostMapping("/registration")
-    public String registration(UserRegistrationRequestDto userRegistrationRequestDto){
+    public String registration(UserRegistrationRequestDto userRegistrationRequestDto) {
         userService.createByUser(userRegistrationRequestDto);
         return "redirect:/home";
     }
 
     @PatchMapping("/state")
-    public String userState(@RequestParam("userId") Long userId){
+    public String userState(@RequestParam("userId") Long userId) {
         userService.stateChangeByUser(userId);
-        return"redirect:/user";
-    }
-    @PatchMapping("/update")
-    public String userUpdate(@RequestParam("userId") Long userId, UserUpdateRequestDto userUpdateRequestDto){
-        userService.updateByUser(userId,userUpdateRequestDto);
         return "redirect:/user";
     }
+
+    @PatchMapping("/update")
+    public String userUpdate(@RequestParam("userId") Long userId, UserUpdateRequestDto userUpdateRequestDto) {
+        userService.updateByUser(userId, userUpdateRequestDto);
+        return "redirect:/user";
+    }
+
     @DeleteMapping("/delete")
-    public String userDelete(@RequestParam("userId") Long userId){
+    public String userDelete(@RequestParam("userId") Long userId) {
         userService.deleteByUser(userId);
         return "redirect:/user";
     }

@@ -1,5 +1,6 @@
 package com.coffeestore.coffeestore.entity;
 
+import com.coffeestore.coffeestore.dto.supplyDetails.SupplyDetailsRegistrationRequestDto;
 import com.coffeestore.coffeestore.dto.supplyDetails.SupplyDetailsUpdateDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,14 +29,20 @@ public class SupplyDetails {
     @Column(nullable = false)
     private int price;
 
-    @Column(nullable = false,name = "supply_amount")
+    @Column(nullable = false, name = "supply_amount")
     private int supplyAmount;
 
     @Column(nullable = false)
     private int state;
 
-    public void update(SupplyDetailsUpdateDto supplyDetailsUpdateDto){
+    public void update(SupplyDetailsUpdateDto supplyDetailsUpdateDto) {
         this.price = supplyDetailsUpdateDto.getPrice();
         this.supplyAmount = supplyDetailsUpdateDto.getSupplyAmount();
     }
+
+    public void update(SupplyDetailsRegistrationRequestDto dto) {
+        this.price = dto.getPrice();
+        this.supplyAmount = dto.getSupplyAmount();
+    }
+
 }

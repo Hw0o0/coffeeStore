@@ -1,12 +1,17 @@
 package com.coffeestore.coffeestore.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class Supply {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,5 +34,11 @@ public class Supply {
         this.totalPrice = totalPrice;
         this.dueDate = new Date();
         this.state = 2;
+    }
+
+    @Builder
+    public Supply(Supplier supplier, int state) {
+        this.supplier = supplier;
+        this.state = state;
     }
 }

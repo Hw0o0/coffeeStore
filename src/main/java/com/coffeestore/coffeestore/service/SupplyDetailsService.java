@@ -1,5 +1,6 @@
 package com.coffeestore.coffeestore.service;
 
+import com.coffeestore.coffeestore.dto.supplyDetails.SupplyDetailsRegistrationRequestDto;
 import com.coffeestore.coffeestore.entity.*;
 import com.coffeestore.coffeestore.repository.IngredientRepository;
 import com.coffeestore.coffeestore.repository.SupplierRepository;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -24,55 +24,43 @@ public class SupplyDetailsService {
     private final IngredientRepository ingredientRepository;
     private final SupplierRepository supplierRepository;
 
-    public List<SupplyDetails> findByAll(){
+    public List<SupplyDetails> findByAll() {
         return supplyDetailsRepository.findAll();
     }
-    public SupplyDetails findBySupplyDetails(Long id){
-        Optional<SupplyDetails> supplyDetails = supplyDetailsRepository.findById(id);
-        return supplyDetails.orElse(null);
+
+    public SupplyDetails findBySupplyDetails(Long id) {
+        return supplyDetailsRepository.findById(id).orElseThrow();
     }
 
-    //SupplyDetails 생성하거나 찾아서 supply 반환
-    public Supply findcreateBySupply(Long supplierId) {
-        Optional<Supplier> supplier = supplierRepository.findById(supplierId);
-        Supply supplyInfo = supplyRepository.findAll()
-                .stream()
-                .filter(supply -> supply.getSupplier().equals(supplier.get()) && supply.getState() == 1)
+    public Supply findCreateBySupply(Long supplierId) {
+        Supplier supplier = supplierRepository.findById(supplierId).orElseThrow();
+        return supplyRepository.findAll().stream()
+                .filter(supply -> supply.getSupplier().equals(supplier) && supply.getState() == 1)
                 .findFirst()
-                .orElse(null);
-        if (supplyInfo == null) {
-            Supply supply = new Supply();
-            supply.setSupplier(supplier.get());
-            supply.setState(1);
-            return supplyRepository.save(supply);
-        } else {
-            return supplyInfo;
-        }
-    }
-    public void createBySupplyDetails(Long supplierId, Long ingredientId, int price , int supplyAmount) {
-        Supply supply = findcreateBySupply(supplierId);
-        Optional<Ingredient> ingredient = ingredientRepository.findById(ingredientId);
-        SupplyDetails supplyDetailsCheck = supplyDetailsRepository.findAll()
-                .stream()
-                .filter(supplyDetails -> supplyDetails.getSupply().getSupplier().getId().equals(supplierId)&&supplyDetails.getIngredient().getId().equals(ingredientId)&&supplyDetails.getState()==1)
-                .findFirst()
-                .orElse(null);
-        if(supplyDetailsCheck == null){
-            SupplyDetails supplyDetails = new SupplyDetails();
-            supplyDetails.setSupply(supply);
-            supplyDetails.setIngredient(ingredient.get());
-            supplyDetails.setPrice(price);
-            supplyDetails.setSupplyAmount(supplyAmount);
-            supplyDetails.setState(1);
-            supplyDetailsRepository.save(supplyDetails);
-        }else{
-            supplyDetailsCheck.setPrice(price);
-            supplyDetailsCheck.setSupplyAmount(supplyAmount);
-            supplyDetailsRepository.save(supplyDetailsCheck);
-        }
+                .orElseGet(() -> supplyRepository.save(Supply.builder().supplier(supplier).state(1).build()));
     }
 
-    public void updateBySupplyDetailsAmount(Long supplyDetailId,int updateAmount){
+    public void createBySupplyDetails(Long supplierId, Long ingredientId, SupplyDetailsRegistrationRequestDto supplyDetailsRegistrationRequestDto) {
+        Supply supply = findCreateBySupply(supplierId);
+        Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow();
+        supplyDetailsRepository.findAll()
+                .stream()
+                .filter(supplyDetails -> supplyDetails.getSupply().getSupplier().getId().equals(supplierId)
+                        && supplyDetails.getIngredient().getId().equals(ingredientId)
+                        && supplyDetails.getState() == 1)
+                .findFirst()
+                .ifPresentOrElse(
+                        details -> details.update(supplyDetailsRegistrationRequestDto),
+                        () -> supplyDetailsRepository.save(SupplyDetails.builder()
+                                .supply(supply)
+                                .ingredient(ingredient)
+                                .price(supplyDetailsRegistrationRequestDto.getPrice())
+                                .supplyAmount(supplyDetailsRegistrationRequestDto.getSupplyAmount())
+                                .state(1)
+                                .build()));
+    }
+
+    public void updateBySupplyDetailsAmount(Long supplyDetailId, int updateAmount) {
         SupplyDetails supplyDetails = findBySupplyDetails(supplyDetailId);
         supplyDetails.setSupplyAmount(updateAmount);
         supplyDetailsRepository.save(supplyDetails);
@@ -84,11 +72,12 @@ public class SupplyDetailsService {
             supplyDetailsRepository.delete(supplyDetails);
         }
     }
+
     //공급 업체별 재료 공급 희망 리스트
-    public List<SupplyDetails> findBySupplyDetailAll(Long supplierId){
+    public List<SupplyDetails> findBySupplyDetailAll(Long supplierId) {
         return findByAll()
                 .stream()
-                .filter(supplyDetails -> supplyDetails.getSupply().getSupplier().getId().equals(supplierId)&&supplyDetails.getState()==1)
+                .filter(supplyDetails -> supplyDetails.getSupply().getSupplier().getId().equals(supplierId) && supplyDetails.getState() == 1)
                 .collect(Collectors.toList());
     }
 }

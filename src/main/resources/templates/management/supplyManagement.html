@@ -3,13 +3,13 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>공급 관리</title>
+    <title>공급 내역 관리</title>
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
-<header>
+<header class="mb-4">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/home">
             <img src="/images/logo.png" alt="">
@@ -18,7 +18,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
+            <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
                     <a class="nav-link" th:if="${session.user != null}" href="/home/logout">로그아웃</a>
                     <a class="nav-link" th:unless="${session.user != null}" href="/home/login">로그인</a>
@@ -27,7 +27,7 @@
                     <a class="nav-link" th:if="${session.user != null}" href="/orderCart">나의 장바구니</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:if="${session.user != null}" href="/supplyDetails">재료 공급 신청</a>
+                    <a class="nav-link" th:if="${session.user != null}" href="/supplier">재료 공급 신청</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a>
@@ -45,33 +45,33 @@
                     <a class="nav-link" th:if="${session.user != null}" href="/supplier">공급업체 관리</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:if="${session.user != null}" href="/order">주문 관리</a>
+                    <a class="nav-link" th:if="${session.user != null}" href="/supplyDetails/supplyDetailManagement">공급 내역 목록</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:if="${session.user != null}" href="/supply">공급 관리</a>
+                    <a class="nav-link" th:if="${session.user != null}" href="/order">주문 관리</a>
                 </li>
+
             </ul>
         </div>
-        <form method="GET" th:action="@{/supply/supplierNameSearch}" id="supplierNameSearch" class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" name="supplierName" placeholder="찾으시는 공급업체명을 입력하세요">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
-        </form>
     </nav>
 </header>
 
 <main class="container">
-    <h1 class="mt-5">공급 관리</h1>
-    <div class="card mb-3" th:each="supply: ${supplyList}">
-        <div class="card-body">
-            <h5 class="card-title" th:text="${supply.getSupplier().getName()}"></h5>
-            <p class="card-text">
-                <strong>총 가격 : </strong> <span th:text="${supply.getTotalPrice()}"></span><br>
-                <strong>납기일 : </strong> <span th:text="${supply.getDueDate()}"></span>
-            </p>
+    <h1 class="mb-4">공급 내역 관리</h1>
+    <div th:each="supply: ${supplyList}">
+        <div class="order card mb-3">
+            <div class="card-body">
+                <label>공급업체명 : </label>
+                <h3 class="order-userName card-title" th:text="${supply.getSupplier().getName()}"></h3>
+                <label>주소 : </label>
+                <h4 class="order-payMethod card-subtitle" th:text="${supply.getSupplier().getAddress()}"></h4>
+                <label>총 금액 : </label>
+                <h4 class="order-totalPrice card-subtitle" th:text="${supply.getTotalPrice()}"></h4>
+                <label>납기일 : </label>
+                <h4 class="order-createdAt card-subtitle" th:text="${supply.getTotalPrice()}"></h4>
+            </div>
         </div>
     </div>
 </main>
-
 </body>
-
 </html>

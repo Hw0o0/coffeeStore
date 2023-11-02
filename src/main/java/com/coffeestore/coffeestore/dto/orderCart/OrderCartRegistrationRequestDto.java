@@ -5,16 +5,15 @@ import com.coffeestore.coffeestore.entity.Order;
 import com.coffeestore.coffeestore.entity.OrderCart;
 import lombok.Data;
 
-import java.util.Optional;
 
 @Data
 public class OrderCartRegistrationRequestDto {
         private Integer amount;
 
-        public OrderCart toEntity(Order order, Optional<Menu> menu){
+        public OrderCart toEntity(Order order, Menu menu){
                 return OrderCart.builder()
                         .order(order)
-                        .menu(menu.orElse(null))
+                        .menu(menu)
                         .amount(amount)
                         .state(1)
                         .build();

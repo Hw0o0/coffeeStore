@@ -72,21 +72,21 @@ public class OrderCartService {
         // 이미 동일한 메뉴가 장바구니에 있는지 확인
         Optional<OrderCart> orderCartCheck = orderCartRepository.findByMenuAndOrder_UserAndState(menu.get(), user, 1);
         //장바구니 여러개 구매
-            if (orderCartCheck.isPresent()) {
-                // 동일한 메뉴가 이미 장바구니에 있으면 수량만 증가시킴
-                OrderCart orderCartInfo = orderCartCheck.get();
-                orderCartInfo.setAmount(orderCartInfo.getAmount() + 1);
-                orderCartRepository.save(orderCartInfo);
-                return orderCartInfo;
-            } else {
-                // 동일한 메뉴가 없으면 새로운 OrderCart을 생성함.
-                OrderCart orderCart = new OrderCart();
-                orderCart.setOrder(order);
-                orderCart.setMenu(menu.get());
-                orderCart.setState(1);
-                orderCart.setAmount(1);
-                orderCartRepository.save(orderCart);
-                return orderCart;
+        if (orderCartCheck.isPresent()) {
+            // 동일한 메뉴가 이미 장바구니에 있으면 수량만 증가시킴
+            OrderCart orderCartInfo = orderCartCheck.get();
+            orderCartInfo.setAmount(orderCartInfo.getAmount() + 1);
+            orderCartRepository.save(orderCartInfo);
+            return orderCartInfo;
+        } else {
+            // 동일한 메뉴가 없으면 새로운 OrderCart을 생성함.
+            OrderCart orderCart = new OrderCart();
+            orderCart.setOrder(order);
+            orderCart.setMenu(menu.get());
+            orderCart.setState(1);
+            orderCart.setAmount(1);
+            orderCartRepository.save(orderCart);
+            return orderCart;
         }
     }
 
@@ -97,11 +97,19 @@ public class OrderCartService {
         orderCartRepository.save(orderCart);
     }
     //주문내역에서 주문되지않은 메뉴 중 취소.
-    //state == 1
+    //장바구니 삭제할떄 담긴게 없으면 order도 자동으로 삭제
     public void deleteByOrderCart(Long cartId) {
         OrderCart orderCart = findByOrderCart(cartId);
         if (orderCart.getState() == 1) {
             orderCartRepository.delete(orderCart);
+        }
+        OrderCart orderCartCheck = orderCartRepository.findAll()
+                .stream()
+                .filter(orderCartInfo -> orderCartInfo.getOrder().getId().equals(orderCart.getOrder().getId()))
+                .findFirst()
+                .orElse(null);
+        if(orderCartCheck == null){
+            orderRepository.delete(orderCart.getOrder());
         }
     }
 }

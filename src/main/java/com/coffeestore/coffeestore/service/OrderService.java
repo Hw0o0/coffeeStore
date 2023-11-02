@@ -76,12 +76,6 @@ public class OrderService {
         }
     }
 
-    //order 삭제
-    public void deleteByOrder(Long id){
-        Order order = findByOrder(id);
-        order.setState(0);
-        orderRepository.save(order);
-    }
     //주문
     public Order findByOrderCart(User user){
         return  orderRepository.findAll()
@@ -94,17 +88,24 @@ public class OrderService {
     //주문 완료 시 시작하는 메소드
     public void orderOk(String payMethod, Long orderId) {
         Order order = findByOrder(orderId);
-        order.setPaymentMethod(payMethod);
-        order.setState(0);
-        order.setCreatedDate(new Date());
-        orderRepository.save(order);
-
+        if(order.getTotalPrice() == 0){
+            orderRepository.delete(order);
+        }
         List<OrderCart> orderCartList = orderCartRepository.findAll()
                 .stream()
                 .filter(orderCart -> orderCart.getOrder().getId().equals(order.getId()))
                 .collect(Collectors.toList());
-        for(OrderCart orderCart : orderCartList){
-            menuUsedRecipeMinus(orderCart);
+        if(!orderCartList.isEmpty()){
+            order.setPaymentMethod(payMethod);
+            order.setState(0);
+            order.setCreatedDate(new Date());
+            orderRepository.save(order);
+
+            for(OrderCart orderCart : orderCartList){
+                menuUsedRecipeMinus(orderCart);
+                orderCart.setState(0);
+                orderCartRepository.save(orderCart);
+            }
         }
     }
 

@@ -30,9 +30,8 @@ public class SupplyController {
         int totalPrice = supplyDetailsList.stream()
                 .mapToInt(supplyDetails -> supplyDetails.getPrice()*supplyDetails.getSupplyAmount())
                 .sum();
-        Supply supply = supplyService.findBySupply(supplyId);
-        supply.setTotalPrice(totalPrice);
-        supplyService.save(supply);
+
+        Supply supply = supplyService.setTotalPrice(supplyId,totalPrice);
         model.addAttribute(supply).addAttribute(supplyDetailsList);
         return "supplyPage";
     }

@@ -85,26 +85,44 @@ public class OrderService {
 
     //주문 완료 시 시작하는 메소드
     public void orderOk(String payMethod, Long orderId) {
-        Order order = findByOrder(orderId);
-        if (order.getTotalPrice() == 0) {
-            orderRepository.delete(order);
-        }
+        Order orderInfo = findByOrder(orderId);
+
         List<OrderCart> orderCartList = orderCartRepository.findAll()
                 .stream()
-                .filter(orderCart -> orderCart.getOrder().getId().equals(order.getId()))
+                .filter(orderCartInfo -> orderCartInfo.getOrder().equals(orderInfo))
                 .collect(Collectors.toList());
+        OrderCart orderCart = orderCartList
+                .stream()
+                .filter(orderCart1 -> orderCart1.getState()==2)
+                .findFirst()
+                .orElse(null);
 
-        if (!orderCartList.isEmpty()) {
-            order.setPaymentMethod(payMethod);
-            order.setState(0);
-            order.setCreatedDate(new Date());
-            orderRepository.save(order);
+        // 메뉴 하나 주문할 떄 상황
+        if(orderCart == null) {
+            orderInfo.setPaymentMethod(payMethod);
+            orderInfo.setState(0);
+            orderInfo.setCreatedDate(new Date());
+            orderRepository.save(orderInfo);
 
-            orderCartList.forEach(orderCart -> {
-                menuUsedRecipeMinus(orderCart);
-                orderCart.setState(0);
-                orderCartRepository.save(orderCart);
+            orderCartList.forEach(orderCart2 -> {
+                menuUsedRecipeMinus(orderCart2);
+                orderCart2.setState(0);
+                orderCartRepository.save(orderCart2);
             });
+        // 메뉴 여러개 주문할 떄 상황
+        }else{
+            orderCartRepository.delete(orderCart);
+            Order order = Order.builder()
+                    .user(orderInfo.getUser())
+                    .paymentMethod(payMethod)
+                    .totalPrice(orderCart.getAmount()*orderCart.getMenu().getPrice())
+                    .state(0)
+                    .createdDate(new Date())
+                    .build();
+            orderRepository.save(order);
+            orderCart.setOrder(order);
+            orderCart.setState(0);
+            orderCartRepository.save(orderCart);
         }
     }
 

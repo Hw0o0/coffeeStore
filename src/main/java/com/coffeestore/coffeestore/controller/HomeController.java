@@ -24,6 +24,12 @@ public class HomeController {
         model.addAttribute("menus", menuList);
         return "/home";
     }
+    @GetMapping("/menuSearch")
+    public String menuSearch(Model model, @RequestParam("menuName") String menuName) {
+        List<Menu> menus = menuService.searchByMenu(menuName);
+        model.addAttribute("menus", menus);
+        return "/home";
+    }
 
     @GetMapping("/login")
     public String login() {

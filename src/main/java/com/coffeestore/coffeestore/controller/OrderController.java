@@ -2,7 +2,6 @@ package com.coffeestore.coffeestore.controller;
 
 import com.coffeestore.coffeestore.entity.Order;
 import com.coffeestore.coffeestore.entity.OrderCart;
-import com.coffeestore.coffeestore.entity.User;
 import com.coffeestore.coffeestore.service.OrderCartService;
 import com.coffeestore.coffeestore.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 

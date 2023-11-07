@@ -2,7 +2,6 @@ package com.coffeestore.coffeestore.service;
 
 import com.coffeestore.coffeestore.dto.supplier.SupplierRegistrationRequestDto;
 import com.coffeestore.coffeestore.dto.supplier.SupplierUpdateRequestDto;
-import com.coffeestore.coffeestore.entity.Ingredient;
 import com.coffeestore.coffeestore.entity.Supplier;
 import com.coffeestore.coffeestore.repository.SupplierRepository;
 import com.coffeestore.coffeestore.repository.SupplyRepository;
@@ -30,10 +29,6 @@ public class SupplierService {
     public Supplier findBySupplier(Long id) {
         Optional<Supplier> supplier = supplierRepository.findById(id);
         return supplier.orElse(null);
-    }
-
-    public Supplier findByName(String supplierName) {
-        return supplierRepository.findByName(supplierName).orElseThrow();
     }
 
     public void createBySupplier(SupplierRegistrationRequestDto supplierRegistrationDto) {

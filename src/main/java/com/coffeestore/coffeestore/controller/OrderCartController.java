@@ -24,7 +24,7 @@ public class OrderCartController {
     public String orderCarts(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
-        List<OrderCart> orderCartList = orderCartService.findByUser(user);
+        List<OrderCart> orderCartList = orderCartService.findByUsers(user);
         model.addAttribute("orderCarts", orderCartList);
         return "/management/orderCartManagement";
     }

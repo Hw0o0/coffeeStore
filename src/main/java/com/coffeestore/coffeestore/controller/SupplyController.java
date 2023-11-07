@@ -29,7 +29,7 @@ public class SupplyController {
         return "supplyPage";
     }
 
-    @GetMapping("/supplierNameSearch")
+    @GetMapping("/supplySearch")
     public String supplierNameSearchView(Model model, @RequestParam("supplierName") String supplierName) {
         List<Supply> supply = supplyService.searchBySupplierName(supplierName);
         model.addAttribute("supplyList", supply);

@@ -28,31 +28,32 @@
           <a class="nav-link" th:if="${session.user != null}" href="/orderCart">나의 장바구니</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:if="${session.user != null}" href="/supplier">재료 공급 신청</a>
+          <a class="nav-link" th:if="${session.user != null}" href="/order">주문 관리</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" th:unless="${session.user != null}" href="/home/userRegistration">회원 가입</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:if="${session.user != null}" href="/user">회원 관리</a>
+          <a class="nav-link" th:if="${session.user != null && session.user.getName().equals('1')}" href="/user">회원 관리</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:if="${session.user != null}" href="/menu">메뉴 관리</a>
+          <a class="nav-link" th:if="${session.user != null && session.user.getName().equals('1')}" href="/menu">메뉴 관리</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:if="${session.user != null}" href="/ingredient">재료 관리</a>
+          <a class="nav-link" th:if="${session.user != null && session.user.getName().equals('1')}" href="/ingredient">재료 관리</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:if="${session.user != null}" href="/supplier">공급업체 관리</a>
+          <a class="nav-link" th:if="${session.user != null && session.user.getName().equals('1')}" href="/supplier">공급업체 관리</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" th:if="${session.user != null}" href="/supplyDetails/supplyDetailManagement">공급 내역 목록</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" th:if="${session.user != null}" href="/order">주문 관리</a>
+          <a class="nav-link" th:if="${session.user != null && session.user.getName().equals('1')}" href="/supplyDetails/supplyDetailManagement">공급 내역 목록</a>
         </li>
       </ul>
     </div>
+    <form method="GET" th:action="@{/ingredient/ingredientSearch}" id="ingredientSearch" class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" name="ingredientName" placeholder="찾으시는 재료를 입력하세요">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">검색</button>
+    </form>
   </nav>
 </header>
 <div class="container">
@@ -111,10 +112,7 @@
                 <input type="submit" value="재료 상태 변경" class="btn btn-warning" />
               </form>
 
-              <form th:method="POST" th:action="@{/supplyDetail/supplyIngredient}" id="supplyIngredient">
-                <input type="hidden" name="ingredientId" th:value="${ingredient.getId()}" />
-                <input type="submit" value="공급 바구니 담기" class="btn btn-info" />
-              </form>
+
             </div>
           </div>
         </div>

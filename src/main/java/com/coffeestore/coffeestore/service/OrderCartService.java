@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -32,49 +31,64 @@ public class OrderCartService {
         return (User) session.getAttribute("user");
     }
 
-    //나의 주문하지않은 카트들
-    public List<OrderCart> findByUser(User user) {
-        return orderCartRepository.findAll()
-                .stream()
-                .filter(orderCart -> orderCart.getState() == 1 && orderCart.getOrder().getUser().equals(user))
-                .collect(Collectors.toList());
+    // 나의 주문하지않은 카트들
+    public List<OrderCart> findByUsers(User user) {
+        return orderCartRepository.findByOrder_UserAndState(user,1);
     }
 
     public OrderCart findByOrderCart(Long id) {
         return orderCartRepository.findById(id).orElseThrow();
     }
 
-    //orderCart 생성하거나 찾아서 order 반환
+    // orderCart 생성하거나 찾아서 order 반환
     public Order findByOrder(HttpServletRequest request) {
         User user = findByUser(request);
-        return orderRepository.findAll()
+        return orderRepository.findOrderByUserAndState(user,1)
                 .stream()
-                .filter(order -> order.getUser().equals(user) && order.getState() == 1)
                 .findFirst()
                 .orElseGet(() -> orderRepository.save(Order.builder().user(user).state(1).build()));
     }
-
-    public OrderCart createByOrderCart(HttpServletRequest request, Long menuId) {
+    public OrderCart createByOneOrderCart(HttpServletRequest request, Long menuId, int amount) {
         User user = findByUser(request);
         Menu menu = menuRepository.findById(menuId).orElseThrow();
         Order order = findByOrder(request);
 
         // 이미 동일한 메뉴가 장바구니에 있는지 확인
         Optional<OrderCart> orderCartCheck = orderCartRepository.findByMenuAndOrder_UserAndState(menu, user, 1);
+
+        //장바구니 여러개 구매
+        if (orderCartCheck.isPresent()) {
+            // 동일한 메뉴가 이미 장바구니에 있으면 수량만 증가시킴
+            OrderCart orderCartInfo = orderCartCheck.get();
+            orderCartInfo.setAmount(amount);
+            orderCartRepository.save(orderCartInfo);
+            return orderCartInfo;
+        }
+        // 동일한 메뉴가 없으면 새로운 OrderCart을 생성함.
+        return orderCartRepository.save(OrderCart.builder().order(order).menu(menu).state(1).amount(amount).build());
+    }
+
+    public void createByOrderCart(HttpServletRequest request, Long menuId) {
+        User user = findByUser(request);
+        Menu menu = menuRepository.findById(menuId).orElseThrow();
+        Order order = findByOrder(request);
+
+        // 이미 동일한 메뉴가 장바구니에 있는지 확인
+        Optional<OrderCart> orderCartCheck = orderCartRepository.findByMenuAndOrder_UserAndState(menu, user, 1);
+
         //장바구니 여러개 구매
         if (orderCartCheck.isPresent()) {
             // 동일한 메뉴가 이미 장바구니에 있으면 수량만 증가시킴
             OrderCart orderCartInfo = orderCartCheck.get();
             orderCartInfo.setAmount(orderCartInfo.getAmount() + 1);
             orderCartRepository.save(orderCartInfo);
-            return orderCartInfo;
-        } else {
-            // 동일한 메뉴가 없으면 새로운 OrderCart을 생성함.
-            return orderCartRepository.save(OrderCart.builder().order(order).menu(menu).state(1).amount(1).build());
+            return;
         }
+            // 동일한 메뉴가 없으면 새로운 OrderCart을 생성함.
+        orderCartRepository.save(OrderCart.builder().order(order).menu(menu).state(1).amount(1).build());
     }
 
-    //메뉴 수량 수정
+    // 메뉴 수량 수정
     public void updateByOrderCartAmount(Long cartId, Integer amount) {
         OrderCart orderCart = findByOrderCart(cartId);
         orderCart.setAmount(amount);
@@ -88,12 +102,8 @@ public class OrderCartService {
         if (orderCart.getState() == 1) {
             orderCartRepository.delete(orderCart);
         }
-        OrderCart orderCartCheck = orderCartRepository.findAll()
-                .stream()
-                .filter(orderCartInfo -> orderCartInfo.getOrder().getId().equals(orderCart.getOrder().getId()))
-                .findFirst()
-                .orElse(null);
-        if (orderCartCheck == null) {
+        List<OrderCart> orderCartCheck = orderCartRepository.findByOrder(orderCart.getOrder());
+        if (orderCartCheck.isEmpty()) {
             orderRepository.delete(orderCart.getOrder());
         }
     }

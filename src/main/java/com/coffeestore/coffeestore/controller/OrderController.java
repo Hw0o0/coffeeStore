@@ -46,18 +46,16 @@ public class OrderController {
     //장박구니 여러개 주문버튼 누를시
     @GetMapping("/orderPage")
     public String orderView(Model model, HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        User user = (User) session.getAttribute("user");
-        Order order = orderService.findByOrderCart(user);
-        List<OrderCart> orderCartList = orderService.createByOrderPage(order);
+        Order order = orderService.findByOrder(request);
+        List<OrderCart> orderCartList = orderService.createByOrderPageView(order);
         model.addAttribute(order).addAttribute(orderCartList);
         return "orderPage";
     }
 
     //바로 구매버튼 누를시
     @GetMapping("/purchase")
-    public String purchaseMenu(Model model, @RequestParam("menuId") Long menuId, HttpServletRequest request) {
-        OrderCart orderCart = orderCartService.createByOrderCart(request, menuId);
+    public String purchaseMenu(Model model, @RequestParam("menuId") Long menuId,int amount, HttpServletRequest request) {
+        OrderCart orderCart = orderCartService.createByOneOrderCart(request, menuId,amount);
         Order order = orderService.findByOrderAndSetPrice(orderCart.getOrder().getId(), orderCart);
         List<OrderCart> orderCartList = new ArrayList<>();
         orderCartList.add(orderCart);

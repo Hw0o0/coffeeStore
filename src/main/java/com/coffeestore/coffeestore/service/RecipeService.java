@@ -18,11 +18,7 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
 
     public List<Recipe> findByMenuUseAll(Long menuId) {    //요리에 사용되는 재료들
-        return recipeRepository.findAll()
-                .stream()
-                .filter(Recipe -> Recipe.getMenu().getId().equals(menuId))
-                .collect(Collectors.toList());
-
+        return recipeRepository.findRecipeByMenu_Id(menuId);
     }
 
     public Recipe findByRecipe(Long id) {

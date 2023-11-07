@@ -34,8 +34,8 @@ public class SupplyDetailsService {
 
     public Supply findCreateBySupply(Long supplierId) {
         Supplier supplier = supplierRepository.findById(supplierId).orElseThrow();
-        return supplyRepository.findAll().stream()
-                .filter(supply -> supply.getSupplier().equals(supplier) && supply.getState() == 1)
+        return supplyRepository.findSupplyBySupplierAndState(supplier,1)
+                .stream()
                 .findFirst()
                 .orElseGet(() -> supplyRepository.save(Supply.builder().supplier(supplier).state(1).build()));
     }
@@ -43,14 +43,12 @@ public class SupplyDetailsService {
     public void createBySupplyDetails(Long supplierId, Long ingredientId, SupplyDetailsRegistrationRequestDto supplyDetailsRegistrationRequestDto) {
         Supply supply = findCreateBySupply(supplierId);
         Ingredient ingredient = ingredientRepository.findById(ingredientId).orElseThrow();
-        supplyDetailsRepository.findAll()
+        supplyDetailsRepository.findSupplyDetailsBySupplierIdAndIngredientId(supplierId,ingredientId)
                 .stream()
-                .filter(supplyDetails -> supplyDetails.getSupply().getSupplier().getId().equals(supplierId)
-                        && supplyDetails.getIngredient().getId().equals(ingredientId)
-                        && supplyDetails.getState() == 1)
                 .findFirst()
                 .ifPresentOrElse(
-                        details -> details.update(supplyDetailsRegistrationRequestDto),
+                        details -> details.
+                        update(supplyDetailsRegistrationRequestDto),
                         () -> supplyDetailsRepository.save(SupplyDetails.builder()
                                 .supply(supply)
                                 .ingredient(ingredient)

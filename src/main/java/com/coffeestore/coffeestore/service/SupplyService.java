@@ -56,15 +56,12 @@ public class SupplyService {
     }
 
     public List<SupplyDetails> findBySupplyDetailsList(Long supplyId) {
-        return supplyDetailsRepository.findAll()
-                .stream()
-                .filter(supplyDetails -> supplyDetails.getSupply().getId().equals(supplyId))
-                .collect(Collectors.toList());
+        Supply supply = supplyRepository.findById(supplyId).orElseThrow();
+        return supplyDetailsRepository.findSupplyDetailsBySupply(supply);
     }
 
     public List<Supply> searchBySupplierName(String supplierName) {
         List<Supply> supplyList = new ArrayList<>();
-
         Pattern name = Pattern.compile(supplierName);
         //문자열에서 패턴을 찾아내는 Matcher 를 통해 찾는다.
         for (Supply supply : findByAll()) {

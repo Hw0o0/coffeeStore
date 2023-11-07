@@ -45,4 +45,9 @@ public class Order {
         this.createdDate = new Date();
         this.state = 2;
     }
+    public void orderOk(String paymentMethod){
+        this.paymentMethod = paymentMethod;
+        this.state = 0;
+        this.createdDate = new Date();
+    }
 }

@@ -65,7 +65,7 @@
             </p>
             <form method="GET" th:action="@{/order/purchase}">
                 <input type="hidden" name="menuId" th:value="${menu.getId()}">
-                <input type="number" name="amount" th:value="${orderCart}" placeholder="주문 수량을 입력해주세요.">
+                <input type="number" name="amount" placeholder="주문 수량을 입력해주세요.">
                 <button type="submit" class="btn btn-primary">구매하기</button>
             </form>
         </div>

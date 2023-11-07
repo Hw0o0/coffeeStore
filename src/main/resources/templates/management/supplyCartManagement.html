@@ -55,35 +55,37 @@
 
 <main class="container">
     <h1 class="mb-4">공급</h1>
-    <div th:each="supplyIngredient: ${ingredientList}">
-        <div class="card mb-3">
-            <div class="card-body">
-                <h5 class="card-title" th:text="${supplyIngredient.getName()}"></h5>
-                <p class="card-text">
-                    <strong>단위 : </strong> <span th:text="${supplyIngredient.getUnit()}"></span>
-                </p>
-                <form method="POST" th:action="@{/supplyDetails/supplyIngredient}">
-                    <input type="hidden" name="supplierId" th:value="${supplier.getId()}"/>
-                    <input type="hidden" name="supplyIngredientId" th:value="${supplyIngredient.getId()}"/>
-                    <div class="form-group">
-                        <label>가격</label>
-                        <input class="form-control" type="number" name="price" placeholder="단가를 입력해주세요."/>
-                    </div>
-                    <div class="form-group">
-                        <label>공급량</label>
-                        <input class="form-control" type="number" name="supplyAmount" placeholder="공급할 수량을 입력해주세요."/>
-                    </div>
-                    <button type="submit" class="btn btn-primary">공급 리스트 추가</button>
-                </form>
+    <div class="row">
+        <div th:each="supplyIngredient: ${ingredientList}" class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${supplyIngredient.getName()}"></h5>
+                    <p class="card-text">
+                        <strong>단위 : </strong> <span th:text="${supplyIngredient.getUnit()}"></span>
+                    </p>
+                    <form method="POST" th:action="@{/supplyDetails/supplyIngredient}">
+                        <input type="hidden" name="supplierId" th:value="${supplier.getId()}"/>
+                        <input type="hidden" name="supplyIngredientId" th:value="${supplyIngredient.getId()}"/>
+                        <div class="form-group">
+                            <label>가격</label>
+                            <input class="form-control" type="number" name="price" placeholder="단가를 입력해주세요."/>
+                        </div>
+                        <div class="form-group">
+                            <label>공급량</label>
+                            <input class="form-control" type="number" name="supplyAmount" placeholder="공급할 수량을 입력해주세요."/>
+                        </div>
+                        <input type="submit" value="공급 리스트 추가" class="btn btn-primary btn-sm" />
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-
     <form method="GET" th:action="@{/supplyDetails/supplyDetailList}" class="mb-3">
         <input type="hidden" name="supplierId" th:value="${supplier.getId()}">
-        <button type="submit" class="btn btn-success">공급하기</button>
-        <a th:href="@{/supplier}" class="btn btn-secondary">돌아가기</a>
+        <input type="submit" value="공급하기" class="btn btn-success btn-sm" />
+        <a th:href="@{/supplier}" class="btn btn-secondary btn-sm">돌아가기</a>
     </form>
 </main>
+
 </body>
 </html>

@@ -59,43 +59,46 @@
 
 <main class="container">
   <h1 class="mt-5">회원 관리</h1>
-  <div class="card mb-3" th:each="user: ${users}">
-    <div class="card-body">
-      <h5 class="card-title" th:text="${user.getName()}"></h5>
-      <p class="card-text">
-        <strong>주소 : </strong> <span th:text="${user.getAddress()}"></span><br>
-        <strong>전화번호 : </strong> <span th:text="${user.getPhoneNumber()}"></span><br>
-        <strong>상태 : </strong> <span th:text="${user.getState() == 0 ? '비활성화':'활성화'}"></span>
-      </p>
-      <form th:method="patch" th:action = "@{/user/update}" id="menuUpdate" class="mb-2">
-        <div class="form-group">
-          <input type ="hidden" name="userId" th:value="${user.getId()}"/>
-          <label for="updateName">이름 : </label>
-          <input type="text" name="updateName" id="updateName" class="form-control"/>
+  <div class="row">
+    <div th:each="user: ${users}" class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${user.getName()}"></h5>
+          <p class="card-text">
+            <strong>주소 : </strong> <span th:text="${user.getAddress()}"></span><br/>
+            <strong>전화번호 : </strong> <span th:text="${user.getPhoneNumber()}"></span><br/>
+            <strong>상태 : </strong> <span th:text="${user.getState() == 0 ? '비활성화':'활성화'}"></span>
+          </p>
+          <form th:method="patch" th:action = "@{/user/update}" id="menuUpdate" class="mb-2">
+            <div class="form-group">
+              <input type ="hidden" name="userId" th:value="${user.getId()}"/>
+              <label for="updateName">이름 : </label>
+              <input type="text" name="updateName" id="updateName" class="form-control"/>
+            </div>
+            <div class="form-group">
+              <label for="updateAddress">주소 : </label>
+              <input type="text" name="updateAddress" id="updateAddress" class="form-control"/>
+            </div>
+            <div class="form-group">
+              <label for="updatePhoneNumber">전화번호 : </label>
+              <input type="text" name="updatePhoneNumber" id="updatePhoneNumber" class="form-control"/>
+            </div>
+            <button type="submit" class="btn btn-danger btn-sm">회원 정보 수정</button>
+          </form>
+          <form th:method="delete" th:action = "@{/user/delete}" id="userDelete">
+            <input type="hidden" name="userId" th:value="${user.getId()}"/>
+            <input type="submit" value="회원 정보 삭제" class="btn btn-danger btn-sm" />
+          </form>
+          <form th:method="patch" th:action = "@{/user/state}" id="userState">
+            <input type="hidden" name="userId" th:value="${user.getId()}"/>
+            <input type="submit" value="회원 상태 변경" class="btn btn-warning btn-sm" />
+          </form>
         </div>
-        <div class="form-group">
-          <label for="updateAddress">주소 : </label>
-          <input type="text" name="updateAddress" id="updateAddress" class="form-control"/>
-        </div>
-        <div class="form-group">
-          <label for="updatePhoneNumber">전화번호 : </label>
-          <input type="text" name="updatePhoneNumber" id="updatePhoneNumber" class="form-control"/>
-        </div>
-        <button type="submit" class="btn btn-primary">회원 정보 수정</button>
-      </form>
-
-      <form th:method="delete" th:action = "@{/user/delete}" id="userDelete" class="mb-2">
-        <input type ="hidden" name="userId" th:value="${user.getId()}"/>
-        <button type="submit" class="btn btn-danger">회원 정보 삭제</button>
-      </form>
-
-      <form th:method="patch" th:action = "@{/user/state}" id="userState" class="mb-2">
-        <input type ="hidden" name="userId" th:value="${user.getId()}"/>
-        <button type="submit" class="btn btn-warning">회원 상태 변경</button>
-      </form>
+      </div>
     </div>
   </div>
 </main>
+
 
 </body>
 

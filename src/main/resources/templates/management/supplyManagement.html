@@ -59,20 +59,21 @@
 
 <main class="container">
     <h1 class="mb-4">공급 내역 관리</h1>
-    <div th:each="supply: ${supplyList}">
-        <div class="order card mb-3">
-            <div class="card-body">
-                <label>공급업체명 : </label>
-                <h3 class="order-userName card-title" th:text="${supply.getSupplier().getName()}"></h3>
-                <label>주소 : </label>
-                <h4 class="order-payMethod card-subtitle" th:text="${supply.getSupplier().getAddress()}"></h4>
-                <label>총 금액 : </label>
-                <h4 class="order-totalPrice card-subtitle" th:text="${supply.getTotalPrice()}"></h4>
-                <label>납기일 : </label>
-                <h4 class="order-createdAt card-subtitle" th:text="${supply.getTotalPrice()}"></h4>
+    <div class="row">
+        <div th:each="supply: ${supplyList}" class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <p class="card-text">
+                        <strong>공급업체명 : </strong> <span th:text="${supply.getSupplier().getName()}"></span><br/>
+                        <strong>주소 : </strong> <span th:text="${supply.getSupplier().getAddress()}"></span><br/>
+                        <strong>총 금액 : </strong> <span th:text="${supply.getTotalPrice()}"></span><br/>
+                        <strong>납기일 : </strong> <span th:text="${supply.getDueDate()}"></span>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </main>
+
 </body>
 </html>

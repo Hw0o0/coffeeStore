@@ -79,43 +79,39 @@
         <a th:href="@{/ingredient}" type="button" class="btn btn-secondary mb-2">돌아가기</a>
       </form>
       <div>
-        <div th:each="ingredient: ${ingredients}">
-          <div class="card mb-3">
-            <div class="card-body">
-              <label>이름 : </label>
-              <h3 class="ingredient-name card-title" th:text="${ingredient.getName()}"></h3>
-              <label>단위 : </label>
-              <h4 class="ingredient-unit card-subtitle" th:text="${ingredient.getUnit()}"></h4>
-              <label>재고량 : </label>
-              <h4 class="ingredient-amount card-subtitle" th:text="${ingredient.getAmount()}"></h4>
-              <label>상태 : </label>
-              <h4 class="ingredient-state card-subtitle" th:text="${ingredient.getState() == 0 ? '비활성화':'활성화'}"></h4>
-
-              <form th:method="patch" th:action="@{/ingredient/update}" id="ingredientUpdate" class="mb-2">
-                <input type="hidden" name="ingredientId" th:value="${ingredient.getId()}" />
-                <label for="updateName">이름 : </label>
-                <input type="text" name="updateName" id="updateName" class="form-control" /><br />
-                <label for="updateUnit">단위 : </label>
-                <input type="text" name="updateUnit" id="updateUnit" class="form-control" /><br />
-                <label for="updateAmount">재고량 : </label>
-                <input type="text" name="updateAmount" id="updateAmount" class="form-control" /><br />
-                <input type="submit" value="재료 정보 수정" class="btn btn-secondary" />
-              </form>
-
-              <form th:method="delete" th:action="@{/ingredient/delete}" id="ingredientDelete" class="mb-2">
-                <input type="hidden" name="ingredientId" th:value="${ingredient.getId()}" />
-                <input type="submit" value="재료 정보 삭제" class="btn btn-danger" />
-              </form>
-
-              <form th:method="patch" th:action="@{/ingredient/state}" id="ingredientState">
-                <input type="hidden" name="ingredientId" th:value="${ingredient.getId()}" />
-                <input type="submit" value="재료 상태 변경" class="btn btn-warning" />
-              </form>
-
-
+        <div class="row">
+          <div th:each="ingredient: ${ingredients}" class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <div class="card-body">
+                <h5 class="card-title" th:text="${ingredient.getName()}"></h5>
+                <p class="card-text">
+                  <strong>단위 : </strong> <span th:text="${ingredient.getUnit()}"></span><br/>
+                  <strong>재고량 : </strong> <span th:text="${ingredient.getAmount()}"></span><br/>
+                  <strong>상태 : </strong> <span th:text="${ingredient.getState() == 0 ? '비활성화':'활성화'}"></span>
+                </p>
+                <form th:method="patch" th:action="@{/ingredient/update}" id="ingredientUpdate" class="mb-2">
+                  <input type="hidden" name="ingredientId" th:value="${ingredient.getId()}" />
+                  <label for="updateName">이름 : </label>
+                  <input type="text" name="updateName" id="updateName" class="form-control" /><br />
+                  <label for="updateUnit">단위 : </label>
+                  <input type="text" name="updateUnit" id="updateUnit" class="form-control" /><br />
+                  <label for="updateAmount">재고량 : </label>
+                  <input type="text" name="updateAmount" id="updateAmount" class="form-control" /><br />
+                  <input type="submit" value="재료 정보 수정" class="btn btn-danger btn-sm" />
+                </form>
+                <form th:method="delete" th:action="@{/ingredient/delete}" id="ingredientDelete">
+                  <input type="hidden" name="ingredientId" th:value="${ingredient.getId()}"/>
+                  <input type="submit" value="재료 정보 삭제" class="btn btn-danger btn-sm" />
+                </form>
+                <form th:method="patch" th:action="@{/ingredient/state}" id="ingredientState">
+                  <input type="hidden" name="ingredientId" th:value="${ingredient.getId()}"/>
+                  <input type="submit" value="재료 상태 변경" class="btn btn-warning btn-sm" />
+                </form>
+              </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </nav>

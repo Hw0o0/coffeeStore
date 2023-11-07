@@ -81,53 +81,49 @@
   </div>
 
   <h3 class="mb-4">메뉴 관리</h3>
-  <div th:each="menu: ${menus}" class="card mb-3">
-    <div class="card-body">
-      <div>
-        <label>이름 : </label>
-        <h3 class="menu-name card-title" th:text="${menu.getName()}"></h3>
-        <label>가격 : </label>
-        <h4 class="menu-price card-subtitle" th:text="${menu.getPrice()}"></h4>
-        <label>카테고리 : </label>
-        <h4 class="menu-categorize card-subtitle" th:text="${menu.getCategorize()}"></h4>
-        <label>상태 : </label>
-        <h4 class="menu-state card-subtitle" th:text="${menu.getState() == 0 ? '비활성화':'활성화'}"></h4>
+  <div class="row">
+    <div th:each="menu: ${menus}" class="col-md-4">
+      <div class="card mb-4 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${menu.getName()}"></h5>
+          <p class="card-text">
+            <strong>가격 : </strong> <span th:text="${menu.getPrice()}"></span><br/>
+            <strong>카테고리 : </strong> <span th:text="${menu.getCategorize()}"></span><br/>
+            <strong>상태 : </strong> <span th:text="${menu.getState() == 0 ? '비활성화':'활성화'}"></span>
+          </p>
+          <form th:method="patch" th:action="@{/menu/update}" id="menuUpdate" class="mb-2">
+            <input type="hidden" name="menuId" th:value="${menu.getId()}" />
+            <div class="form-group">
+              <label for="updateName">이름</label>
+              <input type="text" name="updateName" id="updateName" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="updatePrice">가격</label>
+              <input type="text" name="updatePrice" id="updatePrice" class="form-control" />
+            </div>
+            <div class="form-group">
+              <label for="updateCategorize">카테고리</label>
+              <input type="text" name="updateCategorize" id="updateCategorize" class="form-control" />
+            </div>
+            <input type="submit" value="메뉴 정보 수정" class="btn btn-danger btn-sm" />
+          </form>
+          <form method="GET" th:action="@{/recipe}" id="recipe">
+            <input type="hidden" name="menuId" th:value="${menu.getId()}"/>
+            <input type="submit" value="레시피 관리" class="btn btn-secondary btn-sm" />
+          </form>
+          <form th:method="delete" th:action="@{/menu/delete}" id="menuDelete">
+            <input type="hidden" name="menuId" th:value="${menu.getId()}"/>
+            <input type="submit" value="메뉴 정보 삭제" class="btn btn-danger btn-sm" />
+          </form>
+          <form th:method="patch" th:action="@{/menu/state}" id="menuState">
+            <input type="hidden" name="menuId" th:value="${menu.getId()}"/>
+            <input type="submit" value="메뉴 상태 변경" class="btn btn-warning btn-sm" />
+          </form>
+        </div>
       </div>
-
-      <h4 class="mt-4">메뉴 수정</h4>
-      <form th:method="patch" th:action="@{/menu/update}" id="menuUpdate" class="mb-2">
-        <input type="hidden" name="menuId" th:value="${menu.getId()}" />
-        <div class="form-group">
-          <label for="updateName">이름</label>
-          <input type="text" name="updateName" id="updateName" class="form-control" />
-        </div>
-        <div class="form-group">
-          <label for="updatePrice">가격</label>
-          <input type="text" name="updatePrice" id="updatePrice" class="form-control" />
-        </div>
-        <div class="form-group">
-          <label for="updateCategorize">카테고리</label>
-          <input type="text" name="updateCategorize" id="updateCategorize" class="form-control" />
-        </div>
-        <input type="submit" value="메뉴 정보 수정" class="btn btn-primary" />
-      </form>
-
-      <form method="GET" th:action="@{/recipe}" id="recipe" class="mb-2">
-        <input type="hidden" name="menuId" th:value="${menu.getId()}" />
-        <input type="submit" value="레시피 관리" class="btn btn-secondary" />
-      </form>
-
-      <form th:method="delete" th:action="@{/menu/delete}" id="menuDelete" class="mb-2">
-        <input type="hidden" name="menuId" th:value="${menu.getId()}" />
-        <input type="submit" value="메뉴 정보 삭제" class="btn btn-danger" />
-      </form>
-
-      <form th:method="patch" th:action="@{/menu/state}" id="menuState" class="mb-2">
-        <input type="hidden" name="menuId" th:value="${menu.getId()}" />
-        <input type="submit" value="메뉴 상태 변경" class="btn btn-warning" />
-      </form>
     </div>
   </div>
+
 </div>
 </body>
 </html>

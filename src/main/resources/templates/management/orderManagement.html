@@ -57,18 +57,19 @@
     </nav>
 </header>
 <div class="container">
-    <div>
-        <div th:each="order: ${orderList}">
-            <div class="order card mb-3">
+    <div class="row">
+        <div th:each="order: ${orderList}" class="col-md-4">
+            <div class="card mb-4 shadow-sm">
                 <div class="card-body">
-                    <label>이름 : </label>
-                    <h3 class="order-userName card-title" th:text="${order.getUser().getName()}"></h3>
-                    <label>지불방식 : </label>
-                    <h4 class="order-payMethod card-subtitle" th:text="${order.getPaymentMethod()}"></h4>
-                    <label>가격 : </label>
-                    <h4 class="order-totalPrice card-subtitle" th:text="${order.getTotalPrice()}"></h4>
-                    <label>주문날짜 : </label>
-                    <h4 class="order-createdAt card-subtitle" th:text="${order.getCreatedDate()}"></h4>
+                    <p class="card-text">
+                        <strong>이름 : </strong>  <span th:text="${order.getUser().getName()}"></span>
+                        <br/>
+                        <strong>지불방식 : </strong> <span th:text="${order.getPaymentMethod()}"></span>
+                        <br/>
+                        <strong>가격 : </strong> <span th:text="${order.getTotalPrice()}"></span>
+                        <br/>
+                        <strong>주문날짜 : </strong> <span th:text="${order.getCreatedDate()}"></span>
+                    </p>
                 </div>
             </div>
         </div>

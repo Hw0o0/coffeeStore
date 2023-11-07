@@ -74,43 +74,41 @@
         <input type="submit" value="등록하기" class="btn btn-primary mb-2"/>
         <a th:href="@{/supplier}" type="button" class="btn btn-secondary mb-2">돌아가기</a>
       </form>
-        <div th:each="supplier: ${suppliers}">
-          <div class="card mb-3">
+      <div class="row">
+        <div th:each="supplier: ${suppliers}" class="col-md-4">
+          <div class="card mb-4 shadow-sm">
             <div class="card-body">
-              <label>이름 : </label>
-              <h3 class="supplier-name card-title" th:text="${supplier.getName()}"></h3>
-              <label>주소 : </label>
-              <h4 class="supplier-address card-subtitle" th:text="${supplier.getAddress()}"></h4>
-              <label>상태 : </label>
-              <h4 class="supplier-state card-subtitle" th:text="${supplier.getState() == 0 ? '비활성화':'활성화'}"></h4>
-
-              <form th:method="GET" th:action="@{/supplyDetails}" id="ingredientSupply" class="mb-2">
-                <input type="hidden" name="supplierId" th:value="${supplier.getId()}" />
-                <input type="submit" value="공급 신청하기" class="btn btn-primary" />
+              <h5 class="card-title" th:text="${supplier.getName()}"></h5>
+              <p class="card-text">
+                <strong>주소 : </strong> <span th:text="${supplier.getAddress()}"></span><br/>
+                <strong>상태 : </strong> <span th:text="${supplier.getState() == 0 ? '비활성화':'활성화'}"></span>
+              </p>
+              <form th:method="GET" th:action="@{/supplyDetails}" id="ingredientSupply">
+                <input type="hidden" name="supplierId" th:value="${supplier.getId()}"/>
+                <input type="submit" value="공급 신청하기" class="btn btn-primary btn-sm" />
               </form>
-
               <form th:method="patch" th:action="@{/supplier/update}" id="supplierUpdate" class="mb-2">
                 <input type="hidden" name="supplierId" th:value="${supplier.getId()}" />
                 <label for="updateName">이름 : </label>
                 <input type="text" name="updateName" id="updateName" class="form-control" /><br />
                 <label for="updateAddress">주소 : </label>
                 <input type="text" name="updateAddress" id="updateAddress" class="form-control" /><br />
-                <input type="submit" value="공급업체 정보 수정" class="btn btn-secondary" />
+                <input type="submit" value="공급업체 정보 수정" class="btn btn-danger btn-sm" />
               </form>
-
-              <form th:method="delete" th:action="@{/supplier/delete}" id="supplierDelete" class="mb-2">
-                <input type="hidden" name="supplierId" th:value="${supplier.getId()}" />
-                <input type="submit" value="공급업체 정보 삭제" class="btn btn-danger" />
+              <form th:method="delete" th:action="@{/supplier/delete}" id="supplierDelete">
+                <input type="hidden" name="supplierId" th:value="${supplier.getId()}"/>
+                <input type="submit" value="공급업체 정보 삭제" class="btn btn-danger btn-sm" />
               </form>
-
               <form th:method="patch" th:action="@{/supplier/state}" id="supplierState">
-                <input type="hidden" name="supplierId" th:value="${supplier.getId()}" />
-                <input type="submit" value="공급업체 상태 변경" class="btn btn-warning" />
+                <input type="hidden" name="supplierId" th:value="${supplier.getId()}"/>
+                <input type="submit" value="공급업체 상태 변경" class="btn btn-warning btn-sm" />
               </form>
             </div>
           </div>
         </div>
       </div>
+
+    </div>
   </nav>
 </div>
 </body>

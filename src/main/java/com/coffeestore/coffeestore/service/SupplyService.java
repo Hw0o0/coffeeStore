@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -70,5 +71,12 @@ public class SupplyService {
             }
         }
         return supplyList;
+    }
+
+    public List<Supply> findBySupplyAll() {
+        return findByAll()
+                .stream()
+                .filter(supply -> supply.getTotalPrice()!=0)
+                .collect(Collectors.toList());
     }
 }

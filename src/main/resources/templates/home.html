@@ -59,14 +59,14 @@
 
 <main role="main" class="container">
     <h1 class="mt-5">전체 상품</h1>
-    <div class="row" th:each="menu: ${menus}">
-        <div class="col-md-4">
+    <div class="row">
+        <div th:each="menu: ${menus}" class="col-md-4">
             <div class="card mb-4 shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${menu.getName()}"></h5>
                     <p class="card-text">
                         <strong>가격 : </strong> <span th:text="${menu.getPrice()}"></span>
-                        <br>
+                        <br/>
                         <strong>카테고리 : </strong> <span th:text="${menu.getCategorize()}"></span>
                     </p>
                     <div class="d-flex justify-content-between align-items-center">

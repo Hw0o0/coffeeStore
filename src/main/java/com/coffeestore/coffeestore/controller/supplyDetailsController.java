@@ -36,7 +36,7 @@ public class supplyDetailsController {
 
     @GetMapping("/supplyDetailManagement")
     public String supplyDetailManagement(Model model) {
-        List<Supply> supplyList = supplyService.findByAll();
+        List<Supply> supplyList = supplyService.findBySupplyAll();
         model.addAttribute(supplyList);
         return "/management/supplyManagement";
     }

@@ -7,7 +7,9 @@
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
+<script th:unless="${!#lists.isEmpty(supplyDetailsList)}">
+    window.location.href = '/supplier';
+</script>
 <body>
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -55,36 +57,43 @@
 
 <main class="container">
     <h1 class="mt-5">희망 공급목록 관리</h1>
-    <div class="card mb-3" th:each="supplyCart: ${supplyDetailsList}">
-        <div class="card-body">
-            <h5 class="card-title" th:text="${supplyCart.getIngredient().getName()}"></h5>
-            <p class="card-text">
-                <strong>단위 : </strong> <span th:text="${supplyCart.getIngredient().getUnit()}"></span>
-            </p>
-            <form th:method="patch" th:action = "@{/supplyDetails/updateSupplyAmount}" id="updateSupplyAmount" class="mb-2">
-                <div class="form-group">
-                    <input type ="hidden" name="supplyDetailId" th:value="${supplyCart.getId()}"/>
-                    <input type ="hidden" name="supplierId" th:value="${supplier.getId()}"/>
-                    <label>공급량 : </label>
-                    <input type="number" name="updateAmount" th:value="${supplyCart.getSupplyAmount()}" class="form-control"/>
+    <div class="row">
+        <div th:each="supplyCart: ${supplyDetailsList}" class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${supplyCart.getIngredient().getName()}"></h5>
+                    <p class="card-text">
+                        <strong>단위 : </strong> <span th:text="${supplyCart.getIngredient().getUnit()}"></span>
+                    </p>
+                    <form th:method="patch" th:action = "@{/supplyDetails/updateSupplyAmount}" id="updateSupplyAmount" class="mb-2">
+                        <div class="form-group">
+                            <input type ="hidden" name="supplyDetailId" th:value="${supplyCart.getId()}"/>
+                            <input type ="hidden" name="supplierId" th:value="${supplier.getId()}"/>
+                            <label>공급량 : </label>
+                            <input type="number" name="updateAmount" th:value="${supplyCart.getSupplyAmount()}" class="form-control"/>
+                        </div>
+                        <input type="submit" value="공급량 수정" class="btn btn-primary btn-sm" />
+                    </form>
+                    <form th:method="delete" th:action = "@{/supplyDetails/deleteSupplyDetail}" id="deleteSupplyDetail" class="mb-2">
+                        <input type ="hidden" name="supplyDetailId" th:value="${supplyCart.getId()}"/>
+                        <input type ="hidden" name="supplierId" th:value="${supplier.getId()}"/>
+                        <input type="submit" value="공급 삭제" class="btn btn-danger btn-sm" />
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-primary">공급량 수정</button>
-            </form>
-
-            <form th:method="delete" th:action = "@{/supplyDetails/deleteSupplyDetail}" id="deleteSupplyDetail" class="mb-2">
-                <input type ="hidden" name="supplyDetailId" th:value="${supplyCart.getId()}"/>
-                <input type ="hidden" name="supplierId" th:value="${supplier.getId()}"/>
-                <button type="submit" class="btn btn-danger">공급 삭제</button>
-            </form>
+            </div>
         </div>
     </div>
 
     <form method="GET" th:action="@{/supply}" class="mb-5">
-        <input type ="hidden" name="supplyId" th:value="${supplyDetailsList.get(0).getSupply().getId()}"/>
-        <button type="submit" class="btn btn-primary">최종 공급페이지로 이동하기</button>
-        <a th:href="@{/supplier}" type = "button" class="btn btn-secondary">돌아가기</a>
+        <div th:if="${!#lists.isEmpty(supplyDetailsList)}">
+            <input type="hidden" name="supplyId" th:value="${supplyDetailsList.get(0).getSupply().getId()}"/>
+        </div>
+        <input type="submit" value="최종 공급페이지로 이동하기" class="btn btn-primary btn-sm" />
+        <a th:href="@{/supplier}" type = "button" class="btn btn-secondary btn-sm">돌아가기</a>
     </form>
 </main>
+
+
 
 </body>
 

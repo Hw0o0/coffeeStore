@@ -41,7 +41,7 @@ public class SupplyController {
         Supply supply = supplyService.findBySupply(supplyId);
         List<SupplyDetails> supplyDetailsList = supplyDetailsService.findBySupplyDetailAll(supply.getSupplier().getId());
         supplyService.supplyOk(supply, supplyDetailsList);
-        List<Supply> supplyList = supplyService.findByAll();
+        List<Supply> supplyList = supplyService.findBySupplyAll();
         model.addAttribute(supplyList);
         return "/management/supplyManagement";
     }

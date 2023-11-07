@@ -53,43 +53,35 @@
   </nav>
 </header>
 <div class="container">
-  <nav>
-    <div>
-      <div>
-        <h3 class="mb-4">장바구니 관리</h3>
-      </div>
-      <div th:each="cart: ${orderCarts}">
-        <div class="card mb-3">
-          <div class="card-body">
-            <label>메뉴명 : </label>
-            <h3 class="cart-name card-title" th:text="${cart.getMenu().getName()}"></h3>
-            <label>가격 : </label>
-            <h4 class="cart-price card-subtitle" th:text="${cart.getMenu().getPrice()}"></h4>
-            <label>카테고리 : </label>
-            <h4 class="cart-categorize card-subtitle" th:text="${cart.getMenu().getCategorize()}"></h4>
-            <label>수량 : </label>
-            <h4 class="cart-amount card-subtitle" th:text="${cart.getAmount()}"></h4>
-
-            <form th:method="patch" th:action="@{/orderCart/update}" id="cartUpdate" class="mb-2">
-              <input type="hidden" name="cartId" th:value="${cart.getId()}" />
-              <label for="updateAmount">구매 수량 : </label>
-              <input type="number" name="updateAmount" id="updateAmount" class="form-control" /><br />
-              <input type="submit" value="장바구니 수량 수정" class="btn btn-primary" />
-            </form>
-
-            <form th:method="delete" th:action="@{/orderCart/delete}" id="cartDelete">
-              <input type="hidden" name="cartId" th:value="${cart.getId()}" />
-              <input type="submit" value="장바구니 삭제" class="btn btn-danger" />
-            </form>
-          </div>
+  <div>
+    <h3 class="mb-4">장바구니 관리</h3>
+  </div>
+  <div class="row">
+    <div th:each="cart: ${orderCarts}" class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${cart.getMenu().getName()}"></h5>
+          <h6 class="card-subtitle mb-2 text-muted" th:text="'가격 : ' + ${cart.getMenu().getPrice()}"></h6>
+          <h6 class="card-subtitle mb-2 text-muted" th:text="'카테고리 : ' + ${cart.getMenu().getCategorize()}"></h6>
+          <h6 class="card-subtitle mb-2 text-muted" th:text="'수량 : ' + ${cart.getAmount()}"></h6>
+          <form th:method="patch" th:action="@{/orderCart/update}" id="cartUpdate" class="mb-2">
+            <input type="hidden" name="cartId" th:value="${cart.getId()}" />
+            <label for="updateAmount">구매 수량 : </label>
+            <input type="number" name="updateAmount" id="updateAmount" class="form-control" /><br />
+            <input type="submit" value="장바구니 수량 수정" class="btn btn-primary btn-sm" />
+          </form>
+          <form th:method="delete" th:action="@{/orderCart/delete}" id="cartDelete">
+            <input type="hidden" name="cartId" th:value="${cart.getId()}" />
+            <input type="submit" value="장바구니 삭제" class="btn btn-danger btn-sm" />
+          </form>
         </div>
       </div>
-      <form method="GET" th:action="@{/order/orderPage}">
-        <input type="submit" value="주문 하기" class="btn btn-success">
-        <a th:href="@{/home}" type="button" class="btn btn-secondary">돌아가기</a>
-      </form>
     </div>
-  </nav>
+  </div>
+  <form method="GET" th:action="@{/order/orderPage}">
+    <input type="submit" value="주문 하기" class="btn btn-success">
+    <a th:href="@{/home}" type="button" class="btn btn-secondary">돌아가기</a>
+  </form>
 </div>
 </body>
 </html>

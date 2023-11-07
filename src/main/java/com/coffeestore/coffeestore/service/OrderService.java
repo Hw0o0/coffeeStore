@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +35,8 @@ public class OrderService {
         User user = findByUser(request);
         String manager = "1";
         if (!manager.equals(user.getName())) {
-            return orderRepository.findOrderByUser(user);
-        }else{ return orderRepository.findAll();}
+            return orderRepository.findOrderByUserAndState(user,0);
+        }else{ return orderRepository.findOrderByState(0);}
     }
 
     public Order findByOrder(Long id) {
@@ -44,7 +45,12 @@ public class OrderService {
 
     //orderView를 위한 메소드
     public List<OrderCart> createByOrderPageView(Order order) {
-        List<OrderCart> orderCartList = orderCartRepository.findByOrder(order);
+        List<OrderCart> orderCartList = orderCartRepository.findOrderCartByOrder(order)
+                .stream()
+                .filter(orderCart -> orderCart.getState()!=0)
+                .collect(Collectors.toList());
+        orderCartList.forEach(orderCart -> orderCart.setState(1));
+        orderCartRepository.saveAll(orderCartList);
         order.setTotalPrice(totalPrice(orderCartList));
         orderRepository.save(order);
         return orderCartList;
@@ -78,7 +84,7 @@ public class OrderService {
     public void orderOk(String payMethod, Long orderId) {
         Order orderInfo = findByOrder(orderId);
 
-        List<OrderCart> orderCartList = orderCartRepository.findByOrder(orderInfo);
+        List<OrderCart> orderCartList = orderCartRepository.findOrderCartByOrder(orderInfo);
         OrderCart orderCart = orderCartList
                 .stream()
                 .filter(orderCart1 -> orderCart1.getState()==2)

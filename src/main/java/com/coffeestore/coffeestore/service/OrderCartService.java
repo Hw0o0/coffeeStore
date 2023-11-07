@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -33,7 +34,10 @@ public class OrderCartService {
 
     // 나의 주문하지않은 카트들
     public List<OrderCart> findByUsers(User user) {
-        return orderCartRepository.findByOrder_UserAndState(user,1);
+        return orderCartRepository.findByOrder_User(user)
+                .stream()
+                .filter(orderCart -> orderCart.getState()!=0)
+                .collect(Collectors.toList());
     }
 
     public OrderCart findByOrderCart(Long id) {
@@ -84,7 +88,7 @@ public class OrderCartService {
             orderCartRepository.save(orderCartInfo);
             return;
         }
-            // 동일한 메뉴가 없으면 새로운 OrderCart을 생성함.
+        // 동일한 메뉴가 없으면 새로운 OrderCart을 생성함.
         orderCartRepository.save(OrderCart.builder().order(order).menu(menu).state(1).amount(1).build());
     }
 
@@ -102,7 +106,7 @@ public class OrderCartService {
         if (orderCart.getState() == 1) {
             orderCartRepository.delete(orderCart);
         }
-        List<OrderCart> orderCartCheck = orderCartRepository.findByOrder(orderCart.getOrder());
+        List<OrderCart> orderCartCheck = orderCartRepository.findOrderCartByOrder(orderCart.getOrder());
         if (orderCartCheck.isEmpty()) {
             orderRepository.delete(orderCart.getOrder());
         }

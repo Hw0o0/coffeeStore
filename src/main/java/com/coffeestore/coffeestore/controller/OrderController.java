@@ -41,7 +41,7 @@ public class OrderController {
         return "/management/orderManagement";
     }
 
-    //장박구니 여러개 주문버튼 누를시
+    //orderCartManagement 에서 여러개 주문 버튼 누를시
     @GetMapping("/orderPage")
     public String orderView(Model model, HttpServletRequest request) {
         Order order = orderService.findByOrder(request);
@@ -50,7 +50,7 @@ public class OrderController {
         return "orderPage";
     }
 
-    //바로 구매버튼 누를시
+    //menuDetailsInfo 에서 하나만 구매 버튼 누를시
     @GetMapping("/purchase")
     public String purchaseMenu(Model model, @RequestParam("menuId") Long menuId,int amount, HttpServletRequest request) {
         OrderCart orderCart = orderCartService.createByOneOrderCart(request, menuId,amount);

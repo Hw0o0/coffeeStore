@@ -81,10 +81,11 @@
             <p class="card-text">
                 <strong>사용량 : </strong> <span th:text="${usedRecipe.getAmount()}"></span>
             </p>
+            <p class="card-text">
+                <strong>단위 : </strong> <span th:text="${usedRecipe.getIngredient().getUnit()}"></span>
+            </p>
         </div>
     </div>
 </main>
-
 </body>
-
 </html>

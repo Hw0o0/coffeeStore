@@ -11,6 +11,6 @@ import java.util.Optional;
 
 public interface OrderCartRepository extends JpaRepository<OrderCart,Long> {
     Optional<OrderCart> findByMenuAndOrder_UserAndState(Menu menu, User user, int state);
-    List<OrderCart> findByOrder_UserAndState(User user, int state);
-    List<OrderCart> findByOrder(Order order);
+    List<OrderCart> findOrderCartByOrder(Order order);
+    List<OrderCart> findByOrder_User(User user);
 }

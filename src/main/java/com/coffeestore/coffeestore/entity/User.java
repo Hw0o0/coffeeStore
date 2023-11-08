@@ -27,7 +27,7 @@ public class User {
     private String address;
 
     @Column(nullable = false,name = "phone_number")
-    private Integer phoneNumber;
+    private String phoneNumber;
 
     @Column(nullable = false)
     private int state;
@@ -39,9 +39,9 @@ public class User {
     private Date modificationDate;
 
     public void update(UserUpdateRequestDto userUpdateRequestDto){
-        this.name = userUpdateRequestDto.getUpdateName();
-        this.address = userUpdateRequestDto.getUpdateAddress();
-        this.phoneNumber = userUpdateRequestDto.getUpdatePhoneNumber();
+        this.name = userUpdateRequestDto.getName();
+        this.address = userUpdateRequestDto.getAddress();
+        this.phoneNumber = userUpdateRequestDto.getPhoneNumber();
         this.modificationDate = new Date();
     }
 

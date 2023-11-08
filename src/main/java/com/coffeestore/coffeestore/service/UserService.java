@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -30,9 +32,12 @@ public class UserService {
     }
 
     public User findByNameAndPhoneNumber(LoginReqDto loginReqDto) {
-        return userRepository.findByNameAndPhoneNumber(loginReqDto.getName(), Integer.parseInt(loginReqDto.getPhoneNumber())).orElseThrow();
+        return userRepository.findByNameAndPhoneNumber(loginReqDto.getName(), loginReqDto.getPhoneNumber()).orElseThrow();
     }
-
+    public User findBySessionUser(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        return (User) session.getAttribute("user");
+    }
     public void createByUser(UserRegistrationRequestDto userRegistrationRequestDto) {
         boolean exist = userRepository.existsByPhoneNumber(userRegistrationRequestDto.getPhoneNumber());
         if (!exist) {
@@ -41,10 +46,10 @@ public class UserService {
         }
     }
 
-    public void updateByUser(Long id, UserUpdateRequestDto userUpdateRequestDto) {
+    public User updateByUser(Long id, UserUpdateRequestDto userUpdateRequestDto) {
         User user = findByUser(id);
         user.update(userUpdateRequestDto);
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     public void deleteByUser(Long id) {
@@ -54,7 +59,7 @@ public class UserService {
     }
 
     public boolean login(LoginReqDto loginReqDto) {
-        Optional<User> user = userRepository.findByNameAndPhoneNumber(loginReqDto.getName(), Integer.parseInt(loginReqDto.getPhoneNumber()));
+        Optional<User> user = userRepository.findByNameAndPhoneNumber(loginReqDto.getName(), loginReqDto.getPhoneNumber());
         return user.isPresent();
     }
 

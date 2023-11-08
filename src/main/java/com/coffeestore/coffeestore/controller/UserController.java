@@ -64,6 +64,12 @@ public class UserController {
         userService.updateByUser(userId, userUpdateRequestDto);
         return "redirect:/user";
     }
+    @PatchMapping("/userEdit")
+    public String userEdit(@RequestParam("userId") Long userId,Model model, UserUpdateRequestDto userUpdateRequestDto){
+        User user = userService.updateByUser(userId, userUpdateRequestDto);
+        model.addAttribute(user);
+        return "myPage";
+    }
 
     @DeleteMapping("/delete")
     public String userDelete(@RequestParam("userId") Long userId) {

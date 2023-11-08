@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,8 @@ public class MenuService {
                 .collect(Collectors.toList());
     }
 
-    public void sessionInvalidate(HttpSession session) {
+    public void sessionInvalidate(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
         if (session != null) {
             session.invalidate();
         }

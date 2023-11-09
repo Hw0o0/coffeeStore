@@ -103,7 +103,7 @@ public class OrderCartService {
     //장바구니 삭제할떄 담긴게 없으면 order도 자동으로 삭제
     public void deleteByOrderCart(Long cartId) {
         OrderCart orderCart = findByOrderCart(cartId);
-        if (orderCart.getState() == 1) {
+        if (orderCart.getState() == 1||orderCart.getState()==2) {
             orderCartRepository.delete(orderCart);
         }
         List<OrderCart> orderCartCheck = orderCartRepository.findOrderCartByOrder(orderCart.getOrder());

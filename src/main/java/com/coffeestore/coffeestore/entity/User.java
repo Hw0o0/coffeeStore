@@ -28,6 +28,10 @@ public class User {
 
     @Column(nullable = false,name = "phone_number")
     private String phoneNumber;
+    @Column(nullable = false)
+    private Integer stamp;
+    @Column(nullable = false)
+    private Integer point;
 
     @Column(nullable = false)
     private int state;

@@ -19,6 +19,8 @@ public class UserRegistrationRequestDto {
                 name(name).
                 address(address).
                 phoneNumber(phoneNumber).
+                point(0).
+                stamp(0).
                 state(1).
                 createdDate(new Date()).
                 build();

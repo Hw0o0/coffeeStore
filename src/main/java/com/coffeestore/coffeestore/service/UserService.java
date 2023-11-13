@@ -1,9 +1,13 @@
 package com.coffeestore.coffeestore.service;
 
 import com.coffeestore.coffeestore.dto.user.LoginReqDto;
+import com.coffeestore.coffeestore.entity.AddPoint;
+import com.coffeestore.coffeestore.entity.UsedPoint;
 import com.coffeestore.coffeestore.entity.User;
 import com.coffeestore.coffeestore.dto.user.UserRegistrationRequestDto;
 import com.coffeestore.coffeestore.dto.user.UserUpdateRequestDto;
+import com.coffeestore.coffeestore.repository.AddPointRepository;
+import com.coffeestore.coffeestore.repository.UsedPointRepository;
 import com.coffeestore.coffeestore.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,8 @@ import java.util.regex.Pattern;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final AddPointRepository addPointRepository;
+    private final UsedPointRepository usedPointRepository;
 
     public List<User> findByAll() {
         return userRepository.findAll();
@@ -85,5 +91,13 @@ public class UserService {
             }
         }
         return searchUsers;
+    }
+
+    public List<AddPoint> findByAddPointList(User user) {
+        return addPointRepository.findAddPointByUser(user);
+    }
+
+    public List<UsedPoint> findByUsedPointList(User user) {
+        return usedPointRepository.findUsedPointByUser(user);
     }
 }

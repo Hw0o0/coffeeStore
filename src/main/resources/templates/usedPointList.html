@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <title>주문 페이지</title>
-    <!-- Bootstrap CSS -->
+    <meta charset="UTF-8">
+    <title>포인트 사용 내역</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
-
 <body>
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -54,36 +51,23 @@
         </div>
     </nav>
 </header>
-
-<main class="container">
-    <h1 class="mt-5">주문 정보 입력</h1>
-    <form method="POST" th:action="@{/order/menuOrder}" class="mb-5">
-        <input type="hidden" name="orderId" th:value="${order.getId()}"/>
-        <div class="form-group">
-            <label for="payMethod">지불 방식 :</label>
-            <input type="text" name="payMethod" id="payMethod" placeholder="지불 방식을 입력해주세요." class="form-control" />
-            <label for="usedPoint">사용할 포인트 :</label>
-            <input type="number" name="usedPoint" id="usedPoint" placeholder="사용할 포인트를 입력해주세요."
-                                                  th:value="${session.user.point != null ? session.user.point : 0}"
-                                                  th:readonly="${session.user.point < 1000 ||  session.user.getStamp() < 10} ? readonly"
-                                                  class="form-control" />
-        </div>
-        <h4>총 가격: <span th:text="${order.getTotalPrice()}"></span>원</h4>
-        <button type="submit" class="btn btn-primary">주문하기</button>
-    </form>
-
-    <h2>주문 목록</h2>
-    <div class="card mb-3" th:each="cart: ${orderCartList}">
-        <div class="card-body">
-            <h5 class="card-title" th:text="${cart.getMenu().getName()}"></h5>
-            <p class="card-text">
-                <strong>가격 : </strong> <span th:text="${cart.getMenu().getPrice()}"></span><br>
-                <strong>수량 : </strong> <span th:text="${cart.getAmount()}"></span>
-            </p>
+<main role="main" class="container">
+    <h1 class="mt-5">적립 내역</h1>
+    <div class="row">
+        <div th:each="usedPoint: ${usedPointList}" class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${user.getName()}"></h5>
+                    <p class="card-text">
+                        <strong>적립 금액 : </strong> <span th:text="${usedPoint.getUsedPrice()}"></span><br/>
+                        <strong>적립 내용 : </strong> <span th:text="${usedPoint.getUsedContent()}"></span><br/>
+                        <strong>적립 날짜 : </strong> <span th:text="${usedPoint.getCreatedAt()}"></span>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </main>
 
 </body>
-
 </html>

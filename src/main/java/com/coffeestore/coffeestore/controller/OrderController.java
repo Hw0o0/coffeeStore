@@ -62,8 +62,8 @@ public class OrderController {
     }
 
     @PostMapping("/menuOrder")
-    public String orderOk(@RequestParam("orderId") Long orderId, String payMethod) {
-        orderService.orderOk(payMethod, orderId);
+    public String orderOk(@RequestParam("orderId") Long orderId, String payMethod,Integer usedPoint) {
+        orderService.orderOk(payMethod, orderId, usedPoint);
         return "redirect:/home";
     }
 }

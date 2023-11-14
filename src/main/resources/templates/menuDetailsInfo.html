@@ -69,6 +69,7 @@
                 <input type="hidden" name="menuId" th:value="${menu.getId()}">
                 <input type="number" name="amount" placeholder="주문 수량을 입력해주세요.">
                 <button type="submit" class="btn btn-primary">구매하기</button>
+                <a th:href="@{/home}" type="button" class="btn btn-primary" style="margin-left: 10px;">추가 구매하기</a>
             </form>
         </div>
     </div>

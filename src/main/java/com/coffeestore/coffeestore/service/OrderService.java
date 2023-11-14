@@ -91,7 +91,7 @@ public class OrderService {
                 .findFirst()
                 .orElse(null);
 
-        // 메뉴 하나 주문할 떄 상황
+        // 메뉴 여러개 주문할 떄 상황
         if(orderCart == null) {
             orderInfo.orderOk(payMethod);
             orderRepository.save(orderInfo);
@@ -100,7 +100,7 @@ public class OrderService {
                 orderCart2.setState(0);
             });
             orderCartRepository.saveAll(orderCartList);
-        // 메뉴 여러개 주문할 떄 상황
+        //메뉴 하나 주문할 떄 상황
         }else{
             orderCartRepository.delete(orderCart);
             Order order = Order.builder()
@@ -110,6 +110,7 @@ public class OrderService {
                     .state(0)
                     .createdDate(new Date())
                     .build();
+            menuUsedRecipeMinus(orderCart);
             orderRepository.save(order);
             orderCart.setOrder(order);
             orderCart.setState(0);
